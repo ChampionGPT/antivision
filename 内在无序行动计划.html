@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内在无序行动计划 - 反愿景详情</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --yellow-color: #ca8a04;
+            --yellow-light: #fef9c3;
+            --yellow-dark: #854d0e;
+            --green-color: #10b981;
+            --green-light: #d1fae5;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        
+        .gradient-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .back-button {
+            transition: all 0.2s ease;
+        }
+        
+        .back-button:hover {
+            transform: translateX(-3px);
+        }
+        
+        /* 进度条样式 */
+        .progress-container {
+            height: 5px;
+            width: 100%;
+            background-color: #f1f5f9;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background-color: var(--yellow-color);
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+        
+        /* 周进度条 */
+        .week-progress {
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .week-progress-bar {
+            height: 100%;
+            background-color: var(--green-color);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        /* 习惯追踪器 */
+        .habit-tracker {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .habit-day {
+            aspect-ratio: 1;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .habit-day.completed {
+            background-color: var(--green-color);
+            color: white;
+        }
+        
+        .habit-day.missed {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .habit-day.future {
+            background-color: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+        
+        .habit-day.today {
+            border: 2px solid var(--yellow-color);
+        }
+        
+        /* 目标卡片 */
+        .goal-card {
+            border-left: 4px solid var(--yellow-color);
+            transition: all 0.3s ease;
+        }
+        
+        .goal-card:hover {
+            background-color: var(--yellow-light);
+        }
+        
+        /* 时间线 */
+        .timeline {
+            position: relative;
+            margin-left: 20px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background-color: #e2e8f0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -8px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid var(--yellow-color);
+        }
+        
+        .timeline-item.completed::before {
+            background-color: var(--green-color);
+            border-color: var(--green-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- 阅读进度条 -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <div class="container mx-auto px-4 py-6">
+        <a href="内在无序.html" class="back-button inline-flex items-center text-yellow-600 hover:text-yellow-800">
+            <i class="fas fa-arrow-left mr-2"></i> 返回内在无序详情
+        </a>
+    </div>
+
+    <!-- 英雄区域 -->
+    <div class="relative h-60 md:h-72 mb-12 overflow-hidden">
+        <img src="https://source.unsplash.com/1600x900/?organization,clarity" alt="内在无序行动计划" class="w-full h-full object-cover">
+        <div class="absolute inset-0 gradient-overlay flex flex-col justify-center items-center text-white p-6 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">内在无序行动计划</h1>
+            <p class="text-lg md:text-xl max-w-3xl opacity-90">从混乱到有序，21天建立内在结构，提升表达与行动效率</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 pb-16">
+        <!-- 21天计划概览 -->
+        <div class="mb-12 max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold mb-6 text-yellow-600 flex items-center">
+                <i class="fas fa-calendar-alt mr-3"></i>21天行动计划概览
+            </h2>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-lg font-medium">当前进度</h3>
+                        <span id="weekPercentage" class="text-green-600 font-bold">0%</span>
+                    </div>
+                    <div class="week-progress">
+                        <div id="weekProgressBar" class="week-progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-yellow-50 rounded-lg p-4 text-center">
+                        <h4 class="text-yellow-600 font-medium mb-2">第1-7天</h4>
+                        <p class="text-gray-700">建立思维结构与环境秩序</p>
+                    </div>
+                    <div class="bg-yellow-50 rounded-lg p-4 text-center">
+                        <h4 class="text-yellow-600 font-medium mb-2">第8-14天</h4>
+                        <p class="text-gray-700">强化内在对话与表达能力</p>
+                    </div>
+                    <div class="bg-yellow-50 rounded-lg p-4 text-center">
+                        <h4 class="text-yellow-600 font-medium mb-2">第15-21天</h4>
+                        <p class="text-gray-700">巩固系统思维与行动流程</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 核心习惯追踪 -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-yellow-600 flex items-center">
+                <i class="fas fa-chart-line mr-3"></i>核心习惯追踪
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 习惯1：思维导图 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-sitemap text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">思维导图练习</h3>
+                    </div>
+                    
+                    <p class="text-gray-700 mb-4">每天使用思维导图工具整理至少一个复杂想法或项目</p>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-medium">本周进度</h4>
+                            <span id="habit1Percentage" class="text-green-600 font-bold">0/7</span>
+                        </div>
+                        <div class="habit-tracker" id="habit1Tracker">
+                            <!-- 由JavaScript生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-500">
+                        <p>点击日期标记为已完成（绿色）或未完成（红色）</p>
+                    </div>
+                </div>
+                
+                <!-- 习惯2：环境整理 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-broom text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">环境整理</h3>
+                    </div>
+                    
+                    <p class="text-gray-700 mb-4">每天花15分钟整理工作或生活环境，实践"一物一位"原则</p>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-medium">本周进度</h4>
+                            <span id="habit2Percentage" class="text-green-600 font-bold">0/7</span>
+                        </div>
+                        <div class="habit-tracker" id="habit2Tracker">
+                            <!-- 由JavaScript生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-500">
+                        <p>点击日期标记为已完成（绿色）或未完成（红色）</p>
+                    </div>
+                </div>
+                
+                <!-- 习惯3：自我对话 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-comment-dots text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">自我对话记录</h3>
+                    </div>
+                    
+                    <p class="text-gray-700 mb-4">每天记录3次清晰的自我对话，包括思考过程和行动指令</p>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-medium">本周进度</h4>
+                            <span id="habit3Percentage" class="text-green-600 font-bold">0/7</span>
+                        </div>
+                        <div class="habit-tracker" id="habit3Tracker">
+                            <!-- 由JavaScript生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-500">
+                        <p>点击日期标记为已完成（绿色）或未完成（红色）</p>
+                    </div>
+                </div>
+                
+                <!-- 习惯4：标准作业流程 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-list-check text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">标准作业流程</h3>
+                    </div>
+                    
+                    <p class="text-gray-700 mb-4">每周创建并执行至少一个标准作业流程(SOP)，记录执行效果</p>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-medium">本周进度</h4>
+                            <span id="habit4Percentage" class="text-green-600 font-bold">0/7</span>
+                        </div>
+                        <div class="habit-tracker" id="habit4Tracker">
+                            <!-- 由JavaScript生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-500">
+                        <p>点击日期标记为已完成（绿色）或未完成（红色）</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 具体目标设定 -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-yellow-600 flex items-center">
+                <i class="fas fa-bullseye mr-3"></i>具体目标设定
+            </h2>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium">添加新目标</h3>
+                        <button id="addGoalBtn" class="bg-yellow-100 text-yellow-600 hover:bg-yellow-200 px-3 py-1 rounded-md transition">
+                            <i class="fas fa-plus"></i> 添加
+                        </button>
+                    </div>
+                    
+                    <div id="goalInputContainer" class="hidden mb-4">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="goalTitle" class="block text-sm font-medium text-gray-700 mb-1">目标标题</label>
+                                <input type="text" id="goalTitle" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent" placeholder="例如：创建项目管理SOP">
+                            </div>
+                            
+                            <div>
+                                <label for="goalDescription" class="block text-sm font-medium text-gray-700 mb-1">目标描述</label>
+                                <textarea id="goalDescription" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent" placeholder="详细描述你的目标和完成标准"></textarea>
+                            </div>
+                            
+                            <div>
+                                <label for="goalDeadline" class="block text-sm font-medium text-gray-700 mb-1">截止日期</label>
+                                <input type="date" id="goalDeadline" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <button id="saveGoalBtn" class="bg-yellow-600 text-white hover:bg-yellow-700 px-4 py-2 rounded-md transition">保存目标</button>
+                                <button id="cancelGoalBtn" class="bg-gray-200 text-gray-700 hover:bg-gray-300 px-4 py-2 rounded-md transition">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="goalsList" class="space-y-4">
+                    <!-- 示例目标 -->
+                    <div class="goal-card bg-white p-4 rounded-md shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-medium">创建写作流程SOP</h4>
+                                <p class="text-sm text-gray-600 mt-1">建立一个清晰的写作流程，包括构思、大纲、初稿和修改步骤</p>
+                                <div class="flex items-center mt-2">
+                                    <i class="fas fa-calendar-day text-gray-400 mr-1"></i>
+                                    <span class="text-xs text-gray-500">截止日期: 2023-12-15</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="complete-goal-btn text-green-500 hover:text-green-600">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="delete-goal-btn text-red-500 hover:text-red-600">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="goal-card bg-white p-4 rounded-md shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-medium">整理数字资源库</h4>
+                                <p class="text-sm text-gray-600 mt-1">对电脑文件和云端资源进行分类整理，建立清晰的文件夹结构和命名规则</p>
+                                <div class="flex items-center mt-2">
+                                    <i class="fas fa-calendar-day text-gray-400 mr-1"></i>
+                                    <span class="text-xs text-gray-500">截止日期: 2023-12-20</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="complete-goal-btn text-green-500 hover:text-green-600">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="delete-goal-btn text-red-500 hover:text-red-600">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 每周行动计划 -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-yellow-600 flex items-center">
+                <i class="fas fa-route mr-3"></i>每周行动计划
+            </h2>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+                <div class="timeline">
+                    <!-- 第一周 -->
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-semibold text-yellow-600 mb-2">第一周：建立思维结构与环境秩序</h3>
+                        <div class="space-y-4 mt-4">
+                            <div class="bg-yellow-50 p-4 rounded-md">
+                                <h4 class="font-medium mb-2">日常习惯</h4>
+                                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                    <li>每天使用思维导图整理一个想法或项目</li>
+                                    <li>每天花15分钟整理工作或生活环境</li>
+                                    <li>每天记录3次自我对话</li>
+                                    <li>开始创建一个标准作业流程</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-yellow-50 p-4 rounded-md">
+                                <h4 class="font-medium mb-2">关键任务</h4>
+                                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                    <li>评估当前环境混乱的主要原因</li>
+                                    <li>学习一种思维导图工具的基本使用</li>
+                                    <li>为常见任务创建简单的检查清单</li>
+                                    <li>识别并记录自己的思维模式和表达障碍</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 第二周 -->
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-semibold text-yellow-600 mb-2">第二周：强化内在对话与表达能力</h3>
+                        <div class="space-y-4 mt-4">
+                            <div class="bg-yellow-50 p-4 rounded-md">
+                                <h4 class="font-medium mb-2">日常习惯</h4>
+                                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                    <li>继续思维导图练习，尝试更复杂的项目</li>
+                                    <li>维持环境整理习惯，扩展到数字环境</li>
+                                    <li>增加自我对话的质量和深度</li>
+                                    <li>执行并改进上周创建的标准作业流程</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-yellow-50 p-4 rounded-md">
+                                <h4 class="font-medium mb-2">关键任务</h4>
+                                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                    <li>练习PREP框架进行沟通（观点、理由、例子、观点）</li>
+                                    <li>创建一个个人知识管理系统的基础架构</li>
+                                    <li>尝试录音自己的表达并分析改进点</li>
+                                    <li>为一个重要项目创建详细的执行计划</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 第三周 -->
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-semibold text-yellow-600 mb-2">第三周：巩固系统思维与行动流程</h3>
+                        <div class="space-y-4 mt-4">
+                            <div class="bg-yellow-50 p-4 rounded-md">
+                                <h4 class="font-medium mb-2">日常习惯</h4>
+                                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                    <li>将思维导图应用于更广泛的场景</li>
+                                    <li>建立环境整理的长期维护系统</li>
+                                    <li>将自我对话整合到日常决策中</li>
+                                    <li>创建更多标准作业流程并持续优化</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-yellow-50 p-4 rounded-md">
+                                <h4 class="font-medium mb-2">关键任务</h4>
+                                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                    <li>评估21天以来的进步和挑战</li>
+                                    <li>创建一个应对思维混乱的应急方案</li>
+                                    <li>与他人分享一个复杂想法，测试表达清晰度</li>
+                                    <li>设计未来三个月的持续改进计划</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2023 反愿景计划 - 内在无序行动计划</p>
+            <p class="text-gray-400 mt-2 text-sm">通过系统化方法建立内在秩序，提升表达能力和行动效率</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 阅读进度条
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        });
+        
+        // 习惯追踪器生成
+        function generateHabitTracker(trackerId) {
+            const tracker = document.getElementById(trackerId);
+            if (!tracker) return;
+            
+            // 清空现有内容
+            tracker.innerHTML = '';
+            
+            // 获取当前日期
+            const today = new Date();
+            const currentDay = today.getDay(); // 0是周日，1-6是周一到周六
+            
+            // 调整为周一为一周的第一天
+            const adjustedCurrentDay = currentDay === 0 ? 6 : currentDay - 1;
+            
+            // 创建7天的追踪格子
+            for (let i = 0; i < 7; i++) {
+                const dayElement = document.createElement('

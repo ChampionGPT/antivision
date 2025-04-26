@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拖延症 & 执行力不足 - 反愿景详情</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --blue-color: #3b82f6;
+            --blue-light: #dbeafe;
+            --blue-dark: #1e40af;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        
+        .gradient-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .behavior-card {
+            border-left: 4px solid var(--blue-color);
+            transition: all 0.3s ease;
+        }
+        
+        .behavior-card:hover {
+            background-color: var(--blue-light);
+        }
+        
+        .quote-card {
+            background-color: var(--blue-light);
+            border-radius: 1rem;
+            position: relative;
+        }
+        
+        .quote-card::before {
+            content: """;
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            font-size: 5rem;
+            color: var(--blue-color);
+            opacity: 0.3;
+            font-family: serif;
+        }
+        
+        .strategy-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .strategy-card:hover {
+            border-color: var(--blue-color);
+            background-color: #fff;
+        }
+        
+        .back-button {
+            transition: all 0.2s ease;
+        }
+        
+        .back-button:hover {
+            transform: translateX(-3px);
+        }
+        
+        /* 进度条样式 */
+        .progress-container {
+            height: 5px;
+            width: 100%;
+            background-color: #f1f5f9;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background-color: var(--blue-color);
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+        
+        /* 任务完成度进度条 */
+        .task-progress {
+            height: 20px;
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .task-progress-bar {
+            height: 100%;
+            background-color: var(--blue-color);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        /* 倒计时样式 */
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .countdown-item {
+            background-color: var(--blue-color);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .countdown-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- 阅读进度条 -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <div class="container mx-auto px-4 py-6">
+        <a href="反愿景九宫格.html" class="back-button inline-flex items-center text-blue-600 hover:text-blue-800">
+            <i class="fas fa-arrow-left mr-2"></i> 返回九宫格
+        </a>
+    </div>
+
+    <!-- 英雄区域 -->
+    <div class="relative h-80 md:h-96 mb-12 overflow-hidden">
+        <img src="https://source.unsplash.com/1600x900/?time,clock" alt="拖延症与执行力不足" class="w-full h-full object-cover">
+        <div class="absolute inset-0 gradient-overlay flex flex-col justify-center items-center text-white p-6 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">拖延症 & 执行力不足</h1>
+            <p class="text-lg md:text-xl max-w-3xl opacity-90">任务启动极其困难，难以通过自我指令驱动行动，重要任务永远"明天再说"，生活充满未完成的碎片</p>
+            <a href="拖延症行动计划.html" class="bg-white text-blue-600 hover:bg-blue-50 px-6 py-2 rounded-full font-medium transition shadow-md">
+                <i class="fas fa-arrow-right mr-2"></i> 查看行动计划
+            </a>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 pb-16">
+        <!-- 核心问题描述 -->
+        <div class="mb-12 max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600 flex items-center">
+                <i class="fas fa-exclamation-circle mr-3"></i>核心问题
+            </h2>
+            <div class="quote-card p-6 md:p-8">
+                <p class="text-lg leading-relaxed">
+                    面对任务时难以开始行动，即使知道该做什么，也难以通过自我指令有效驱动自己开始行动。过度沉迷于单一"有趣"任务（如调试提示词、研究新工具），忽略或放弃原定重要计划（如写播客稿、公众号文章）。无法清晰、结构化地梳理和执行既定流程，导致效率低下或半途而废。
+                </p>
+            </div>
+        </div>
+
+        <!-- 具体行为表现 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-blue-600 flex items-center">
+                <i class="fas fa-bolt mr-3"></i>具体行为表现
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 行为卡片1 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-hourglass-start text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">启动困难</h3>
+                    </div>
+                    <p class="text-gray-700">任务启动极其困难，即使知道该做什么，也难以通过自我指令有效驱动自己开始行动，经常需要外部刺激或等到最后期限。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-blue-500"></i>
+                        <span>触发因素：内在对话不足、完美主义</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片2 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-mobile-screen text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">深夜刷手机</h3>
+                    </div>
+                    <p class="text-gray-700">深夜漫无目的地刷手机，沉迷于购物App、短视频或其他无关信息，导致晚睡，影响次日状态。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-blue-500"></i>
+                        <span>触发因素：冲动控制不足、即时满足感</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片3 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-brain text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">过度沉迷单一任务</h3>
+                    </div>
+                    <p class="text-gray-700">过度沉迷/Hyperfocus于单一"有趣"任务（如调试提示词、Coze助手、研究新工具），忽略或放弃原定重要计划（如写播客稿、公众号文章）。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-blue-500"></i>
+                        <span>触发因素：注意力调控不足、新鲜感驱动</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片4 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-clock text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">等待时分心</h3>
+                    </div>
+                    <p class="text-gray-700">在任务等待时（如电脑慢、工作间隙），无法自控地分心刷手机或抽烟，难以快速切换回重要事项。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-blue-500"></i>
+                        <span>触发因素：冲动控制不足、任务切换困难</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片5 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-person-running text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">浅尝辄止</h3>
+                    </div>
+                    <p class="text-gray-700">做事浅尝辄止，很多事情（如TikTok视频剪辑）因初期效果不佳或缺乏即时反馈而轻易放弃，无法沉下心来精通任何一项技能。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-blue-500"></i>
+                        <span>触发因素：缺乏耐心、需要即时反馈</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片6 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-file-lines text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">流程执行困难</h3>
+                    </div>
+                    <p class="text-gray-700">无法清晰、结构化地梳理和执行既定流程（如复盘流程、笔记整理方法、提示词库建立），导致效率低下或半途而废。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-blue-500"></i>
+                        <span>触发因素：内在对话不足、结构化思维缺乏</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 负面影响 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-blue-600 flex items-center">
+                <i class="fas fa-arrow-trend-down mr-3"></i>负面影响
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 影响卡片1 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-puzzle-piece text-red-500 mr-3"></i>碎片化人生
+                    </h3>
+                    <p class="text-gray-700">每天被各种新奇想法或外部干扰轻易打断，重要任务永远"明天再说"，生活充满未完成的碎片，无法形成有意义的成就。</p>
+                </div>
+                
+                <!-- 影响卡片2 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-brain text-purple-500 mr-3"></i>自我效能感降低
+                    </h3>
+                    <p class="text-gray-700">反复的拖延行为导致对自己的能力产生怀疑，自信心下降，形成"我做不到"的消极信念，进一步强化拖延循环。</p>
+                </div>
+                
+                <!-- 影响卡片3 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-chart-line text-red-500 mr-3"></i>职业发展受限
+                    </h3>
+                    <p class="text-gray-700">无法沉下心来精通任何一项技能或完成一个长期项目，永远停留在入门或半途而废的阶段，限制了职业发展和个人成长的可能性。</p>
+                </div>
+                
+                <!-- 影响卡片4 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-heart-pulse text-yellow-500 mr-3"></i>内耗与焦虑
+                    </h3>
+                    <p class="text-gray-700">长期拖延导致持续的内疚感、焦虑和内耗思维，即使在休息时也无法真正放松，影响心理健康和社会质量。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 应对策略 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-green-600 flex items-center">
+                <i class="fas fa-shield-alt mr-3"></i>应对策略
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 策略卡片1 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-stopwatch text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">番茄工作法</h3>
+                    </div>
+                    <p class="text-gray-700">使用25分钟工作+5分钟休息的循环，降低启动阻力，增加即时反馈，培养专注习惯。承诺"只做25分钟"比承诺完成整个任务更容易。</p>
+                </div>
+                
+                <!-- 策略卡片2 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-cubes-stacked text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">任务分解</h3>
+                    </div>
+                    <p class="text-gray-700">将大型复杂任务（如提示词库建立、笔记整理）分解为具体的小步骤，每个步骤不超过30分钟，减少心理阻力，创造小胜利，增强动力和成就感。</p>
+                </div>
+                
+                <!-- 策略卡片3 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-calendar-check text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">具体时间承诺</h3>
+                    </div>
+                    <p class="text-gray-700">不要笼统地说"明天做"，而是在日历上安排具体时间段（如"周二9:00-10:30写播客稿"），并视为与自己的重要约定，提高执行概率。</p>
+                </div>
+                
+                <!-- 策略卡片4 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-mobile-screen-button text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">环境优化</h3>
+                    </div>
+                    <p class="text-gray-700">创建专注工作环境：手机静音并放在视线外，关闭电脑通知，使用网页拦截工具，准备所需材料，减少决策疲劳和分心因素（特别是在等待时容易分心的情况）。</p>
+                </div>
+                
+                <!-- 策略卡片5 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-user-group text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">公开承诺</h3>
+                    </div>
+                    <p class="text-gray-700">向他人（同事、朋友、导师）公开宣布你的目标和截止日期（如公众号文章发布时间），增加社交压力和责任感，或找到执行伙伴一起工作，相互监督。</p>
+                </div>
+                
+                <!-- 策略卡片6 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-comment-dots text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">自我对话强化</h3>
+                    </div>
+                    <p class="text-gray-700">培养有效的自我对话能力，通过明确的语言指令引导自己行动（如"现在我要专注20分钟完成提示词调试"），记录和复盘过程，形成可复用的方法论。</p>
+                </div>
+            </div>
+            
+            <!-- 添加行动计划链接 -->
+            <div class="text-center mt-8">
+                <a href="拖延症行动计划.html" class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition shadow-md">
+                    <i class="fas fa-clipboard-list mr-2"></i> 查看21天行动计划
+                </a>
+                <p class="text-gray-600 mt-2">制定详细的21天行动计划，通过习惯追踪和目标设定，逐步克服拖延</p>
+            </div>
+        </div>
+        
+        <!-- 任务追踪器 -->
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-center">今日任务追踪器</h2>
+            
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-lg font-medium">重要任务完成进度</h3>
+                    <span id="taskPercentage" class="text-blue-600 font-bold">0%</span>
+                </div>
+                <div class="task-progress">
+                    <div id="taskProgressBar" class="task-progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium">添加今日任务</h3>
+                    <button id="addTaskBtn" class="bg-blue-100 text-blue-600 hover:bg-blue-200 px-3 py-1 rounded-md transition">
+                        <i class="fas fa-plus"></i> 添加
+                    </button>
+                </div>
+                
+                <div id="taskInputContainer" class="hidden mb-4">
+                    <div class="flex gap-2">
+                        <input type="text" id="taskInput" class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="输入任务内容...">
+                        <select id="taskPriority" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                            <option value="high">高优先级</option>
+                            <option value="medium" selected>中优先级</option>
+                            <option value="low">低优先级</option>
+                        </select>
+                        <button id="saveTaskBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">保存</button>
+                        <button id="cancelTaskBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md transition">取消</button>
+                    </div>
+                </div>
+                
+                <div id="taskList" class="space-y-3">
+                    <!-- 任务列表将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-medium mb-4">专注倒计时</h3>
+                <div class="countdown-container">
+                    <div class="countdown-item">
+                        <div id="minutes" class="text-2xl font-bold">25</div>
+                        <div class="countdown-label">分钟</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div id="seconds" class="text-2xl font-bold">00</div>
+                        <div class="countdown-label">秒</div>
+                    </div>
+                </div>
+                <div class="flex justify-center gap-3 mt-4">
+                    <button id="startTimerBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
+                        <i class="fas fa-play mr-1"></i> 开始
+                    </button>
+                    <button id="pauseTimerBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md transition" disabled>
+                        <i class="fas fa-pause mr-1"></i> 暂停
+                    </button>
+                    <button id="resetTimerBtn" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition">
+                        <i class="fas fa-rotate mr-1"></i> 重置
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-center text-gray-500 text-sm mt-8">
+                <p>完成任务后点击对应的复选框，系统会自动计算您的完成进度</p>
+                <p class="mt-2">使用番茄工作法：25分钟专注工作，然后休息5分钟</p>
+            </div>
+        </div>
+        
+        <!-- 返回按钮 -->
+        <div class="text-center">
+            <a href="反愿景九宫格.html" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
+                <i class="fas fa-arrow-left mr-2"></i> 返回九宫格总览
+            </a>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-4">反愿景规划 - 通过识别自身不良行为模式，规划理想自我的发展路径</p>
+            <div class="flex justify-center space-x-4">
+                <a href="反愿景九宫格.html" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-home"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-question-circle"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 阅读进度条
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        });
+        
+        // 任务管理功能
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        const taskInputContainer = document.getElementById('taskInputContainer');
+        const taskInput = document.getElementById('taskInput');
+        const taskPriority = document.getElementById('taskPriority');
+        const saveTaskBtn = document.getElementById('saveTaskBtn');
+        const cancelTaskBtn = document.getElementById('cancelTaskBtn');
+        const taskList = document.getElementById('taskList');
+        const taskProgressBar = document.getElementById('taskProgressBar');
+        const taskPercentage = document.getElementById('taskPercentage');
+        
+        // 显示/隐藏任务输入框
+        addTaskBtn.addEventListener('click', function() {
+            taskInputContainer.classList.remove('hidden');
+            taskInput.focus();
+        });
+        
+        cancelTaskBtn.addEventListener('click', function() {
+            taskInputContainer.classList.add('hidden');
+            taskInput.value = '';
+        });
+        
+        // 保存任务
+        saveTaskBtn.addEventListener('click', function() {
+            addTask();
+        });
+        
+        // 按Enter键保存任务
+        taskInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addTask();
+            }
+        });
+        
+        // 添加任务函数
+        function addTask() {
+            const taskText = taskInput.value.trim();
+            if (taskText === '') return;
+            
+            const priority = taskPriority.value;
+            const taskId = 'task-' + Date.now();
+            
+            // 创建任务元素
+            const taskElement = document.createElement('div');
+            taskElement.id = taskId;
+            taskElement.className = 'flex items-center p-3 border border-gray-200 rounded-md bg-white';
+            
+            // 设置优先级标记颜色
+            let priorityColor = '';
+            let priorityText = '';
+            
+            switch(priority) {
+                case 'high':
+                    priorityColor = 'bg-red-100 text-red-600';
+                    priorityText = '高';
+                    break;
+                case 'medium':
+                    priorityColor = 'bg-yellow-100 text-yellow-600';
+                    priorityText = '中';
+                    break;
+                case 'low':
+                    priorityColor = 'bg-green-100 text-green-600';
+                    priorityText = '低';
+                    break;
+            }
+            
+            taskElement.innerHTML = `
+                <input type="checkbox" class="task-checkbox mr-3 h-5 w-5 text-blue-600 rounded" data-id="${taskId}">
+                <div class="flex-1">
+                    <div class="flex items-center">
+                        <span class="task-text">${taskText}</span>
+                        <span class="ml-2 px-2 py-1 text-xs rounded-full ${priorityColor}">${priorityText}</span>
+                    </div>
+                </div>
+                <button class="delete-task-btn text-gray-400 hover:text-red-500 ml-2" data-id="${taskId}">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            `;
+            
+            // 添加到任务列表
+            taskList.appendChild(taskElement);
+            
+            // 清空输入框并隐藏
+            taskInput.value = '';
+            taskInputContainer.classList.add('hidden');
+            
+            // 更新进度条
+            updateProgress();
+            
+            // 添加删除任务事件
+            const deleteBtn = taskElement.querySelector('.delete-task-btn');
+            deleteBtn.addEventListener('click', function() {
+                const taskId = this.getAttribute('data-id');
+                const taskElement = document.getElementById(taskId);
+                taskElement.remove();
+                updateProgress();
+            });
+            
+            // 添加任务完成事件
+            const checkbox = taskElement.querySelector('.task-checkbox');
+            checkbox.addEventListener('change', function() {
+                const taskId = this.getAttribute('data-id');
+                const taskElement = document.getElementById(taskId);
+                const taskText = taskElement.querySelector('.task-text');
+                
+                if (this.checked) {
+                    taskText.classList.add('line-through', 'text-gray-400');
+                } else {
+                    taskText.classList.remove('line-through', 'text-gray-400');
+                }
+                
+                updateProgress();
+            });
+        }
+        
+        // 更新进度条
+        function updateProgress() {
+            const totalTasks = document.querySelectorAll('.task-checkbox').length;
+            const completedTasks = document.querySelectorAll('.task-checkbox:checked').length;
+            
+            if (totalTasks === 0) {
+                taskProgressBar.style.width = '0%';
+                taskPercentage.textContent = '0%';
+                return;
+            }
+            
+            const percentage = Math.round((completedTasks / totalTasks) * 100);
+            taskProgressBar.style.width = percentage + '%';
+            taskPercentage.textContent = percentage + '%';
+        }
+        
+        // 番茄钟计时器
+        const minutesDisplay = document.getElementById('minutes');
+        const secondsDisplay = document.getElementById('seconds');
+        const startTimerBtn = document.getElementById('startTimerBtn');
+        const pauseTimerBtn = document.getElementById('pauseTimerBtn');
+        const resetTimerBtn = document.getElementById('resetTimerBtn');
+        
+        let timer;
+        let totalSeconds = 25 * 60; // 25分钟
+        let isTimerRunning = false;
+        
+        // 更新显示时间
+        function updateTimerDisplay() {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            
+            minutesDisplay.textContent = minutes < 10 ? '0' + minutes : minutes;
+            secondsDisplay.textContent = seconds < 10 ? '0' + seconds : seconds;
+        }
+        
+        // 开始计时器
+        startTimerBtn.addEventListener('click', function() {
+            if (isTimerRunning) return;
+            
+            isTimerRunning = true;
+            startTimerBtn.disabled = true;
+            pauseTimerBtn.disabled = false;
+            
+            timer = setInterval(function() {
+                if (totalSeconds <= 0) {
+                    clearInterval(timer);
+                    isTimerRunning = false;
+                    startTimerBtn.disabled = false;
+                    pauseTimerBtn.disabled = true;
+                    
+                    // 播放提示音
+                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3');
+                    audio.play();
+                    
+                    // 显示通知
+                    if (Notification.permission === 'granted') {
+                        new Notification('番茄时间结束', {
+                            body: '休息一下吧！',
+                            icon: 'https://cdn-icons-png.flaticon.com/512/1721/1721461.png'
+                        });
+                    }
+                    
+                    return;
+                }
+                
+                totalSeconds--;
+                updateTimerDisplay();
+            }, 1000);
+        });
+        
+        // 暂停计时器
+        pauseTimerBtn.addEventListener('click', function() {
+            clearInterval(timer);
+            isTimerRunning = false;
+            startTimerBtn.disabled = false;
+            pauseTimerBtn.disabled = true;
+        });
+        
+        // 重置计时器
+        resetTimerBtn.addEventListener('click', function() {
+            clearInterval(timer);
+            isTimerRunning = false;
+            totalSeconds = 25 * 60;
+            updateTimerDisplay();
+            startTimerBtn.disabled = false;
+            pauseTimerBtn.disabled = true;
+        });
+        
+        // 请求通知权限
+        if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            Notification.requestPermission();
+        }
+        
+        // 初始化
+        updateTimerDisplay();
+    </script>
+</body>
+</html>

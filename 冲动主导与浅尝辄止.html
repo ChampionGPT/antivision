@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>冲动主导 & 浅尝辄止 - 反愿景详情</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --red-color: #dc2626;
+            --red-light: #fee2e2;
+            --red-dark: #991b1b;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 添加渐变背景样式 */
+        .header-gradient {
+            background: linear-gradient(135deg, var(--red-color), #f97316);
+        }
+        
+        .gradient-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .behavior-card {
+            border-left: 4px solid var(--red-color);
+            transition: all 0.3s ease;
+        }
+        
+        .behavior-card:hover {
+            background-color: var(--red-light);
+        }
+        
+        .quote-card {
+            background-color: var(--red-light);
+            border-radius: 1rem;
+            position: relative;
+        }
+        
+        .quote-card::before {
+            content: """;
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            font-size: 5rem;
+            color: var(--red-color);
+            opacity: 0.3;
+            font-family: serif;
+        }
+        
+        .strategy-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .strategy-card:hover {
+            border-color: var(--red-color);
+            background-color: #fff;
+        }
+        
+        .back-button {
+            transition: all 0.2s ease;
+        }
+        
+        .back-button:hover {
+            transform: translateX(-3px);
+        }
+        
+        /* 进度条样式 */
+        .progress-container {
+            height: 5px;
+            width: 100%;
+            background-color: #f1f5f9;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background-color: var(--red-color);
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+        
+        /* 添加导航栏样式 */
+        .action-btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline {
+            border: 1px solid currentColor;
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <!-- 阅读进度条 -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- 导航栏 - 使用情绪奴隶与动力荒漠的样式 -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold text-gray-800 flex items-center">
+                <i class="fas fa-brain mr-2 text-red-600"></i>
+                反愿景计划
+            </a>
+            <div>
+                <a href="反愿景九宫格.html" class="px-3 py-2 rounded hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-th mr-1"></i>九宫格
+                </a>
+                <a href="网站目录.html" class="px-3 py-2 rounded hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-sitemap mr-1"></i>网站目录
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 头部横幅 - 使用情绪奴隶与动力荒漠的渐变风格 -->
+    <header class="header-gradient text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">冲动主导 & 浅尝辄止</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90">
+                行为被即时冲动或外部干扰轻易驱动，难以维持对既定目标的专注和执行，缺乏对无效行为的抑制力
+            </p>
+            <div class="mt-6">
+                <a href="反愿景九宫格.html" class="action-btn btn-outline text-white border-white hover:bg-white hover:bg-opacity-20">
+                    <i class="fas fa-arrow-left mr-2"></i>返回九宫格
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 保留原有内容结构，只移除旧的返回按钮和英雄区域 -->
+    <div class="container mx-auto px-4 pb-16">
+        <!-- 核心问题描述 -->
+        <div class="mb-12 max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold mb-6 text-red-600 flex items-center">
+                <i class="fas fa-exclamation-circle mr-3"></i>核心问题
+            </h2>
+            <div class="quote-card p-6 md:p-8">
+                <p class="text-lg leading-relaxed">
+                    每天被各种新奇想法或外部干扰轻易打断，重要任务永远"明天再说"，生活充满未完成的碎片。无法沉下心来精通任何一项技能或完成一个长期项目，永远停留在入门或半途而废的阶段。
+                </p>
+            </div>
+        </div>
+
+        <!-- 具体行为表现 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-red-600 flex items-center">
+                <i class="fas fa-bolt mr-3"></i>具体行为表现
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 行为卡片1 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-red-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-shopping-cart text-red-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">冲动购物</h3>
+                    </div>
+                    <p class="text-gray-700">在压力、放松或无聊时，不假思索地购买非必需品（如烟、零食、床垫、专辑、显示器等），导致财务状况紧张，无法积累财富。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-yellow-500"></i>
+                        <span>触发因素：压力、无聊、放松时刻</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片2 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-red-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-mobile-alt text-red-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">深夜刷手机</h3>
+                    </div>
+                    <p class="text-gray-700">深夜漫无目的地刷手机，沉迷于购物App、短视频或其他无关信息，导致晚睡，影响次日状态和工作效率。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-yellow-500"></i>
+                        <span>触发因素：睡前放松、逃避压力</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片3 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-red-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-brain text-red-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">过度沉迷/Hyperfocus</h3>
+                    </div>
+                    <p class="text-gray-700">过度沉迷于单一"有趣"任务（如调试提示词、Coze助手、研究新工具），忽略或放弃原定重要计划（如写播客稿、公众号文章）。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-yellow-500"></i>
+                        <span>触发因素：新奇事物、即时反馈</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片4 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-red-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-wind text-red-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">任务等待时分心</h3>
+                    </div>
+                    <p class="text-gray-700">在任务等待时（如电脑慢、工作间隙），无法自控地分心刷手机或抽烟，难以快速切换回重要事项，导致效率低下。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-yellow-500"></i>
+                        <span>触发因素：等待时间、系统延迟</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片5 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-red-100 p-3 rounded-full mr-4">
+                            <i class="far fa-clock text-red-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">缺乏耐心</h3>
+                    </div>
+                    <p class="text-gray-700">缺乏耐心处理无聊但必要的工作（如外勤接送学生），或在与人交流时轻易打断他人，导致人际关系紧张。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-yellow-500"></i>
+                        <span>触发因素：无聊任务、对话节奏慢</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片6 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-red-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-flag text-red-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">浅尝辄止</h3>
+                    </div>
+                    <p class="text-gray-700">做事浅尝辄止，很多事情（如TikTok视频剪辑）因初期效果不佳或缺乏即时反馈而轻易放弃，无法坚持完成长期项目。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-yellow-500"></i>
+                        <span>触发因素：缺乏即时反馈、初期困难</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 负面影响 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-red-600 flex items-center">
+                <i class="fas fa-arrow-trend-down mr-3"></i>负面影响
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 影响卡片1 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-coins text-yellow-500 mr-3"></i>财务状况紧张
+                    </h3>
+                    <p class="text-gray-700">财务状况因冲动消费而持续紧张，无法积累财富，长期影响经济安全感和生活质量。</p>
+                </div>
+                
+                <!-- 影响卡片2 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-user-group text-blue-500 mr-3"></i>人际关系紧张
+                    </h3>
+                    <p class="text-gray-700">人际关系因缺乏耐心、易怒或打断他人而变得紧张疏远，影响社交和工作协作。</p>
+                </div>
+                
+                <!-- 影响卡片3 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-graduation-cap text-purple-500 mr-3"></i>技能无法精通
+                    </h3>
+                    <p class="text-gray-700">无法沉下心来精通任何一项技能或完成一个长期项目，永远停留在入门或半途而废的阶段。</p>
+                </div>
+                
+                <!-- 影响卡片4 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-battery-quarter text-red-500 mr-3"></i>精力持续耗散
+                    </h3>
+                    <p class="text-gray-700">精力被各种琐事和干扰持续耗散，无法集中于真正重要的事情，导致长期成就感缺失。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 应对策略 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-green-600 flex items-center">
+                <i class="fas fa-shield-alt mr-3"></i>应对策略
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 策略卡片1 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-clipboard-list text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">记录冲动</h3>
+                    </div>
+                    <p class="text-gray-700">当感到购物冲动时，先记录下来，设置24小时冷静期，再决定是否真的需要。</p>
+                </div>
+                
+                <!-- 策略卡片2 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-clock text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">番茄工作法</h3>
+                    </div>
+                    <p class="text-gray-700">使用番茄工作法，设定25分钟专注时间，期间不允许任何干扰，然后短暂休息。</p>
+                </div>
+                
+                <!-- 策略卡片3 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-mobile-screen-button text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">手机管理</h3>
+                    </div>
+                    <p class="text-gray-700">使用应用限制功能，设置社交媒体和购物应用的使用时间，睡前一小时不看手机。</p>
+                </div>
+                
+                <!-- 策略卡片4 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-tasks text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">任务分解</h3>
+                    </div>
+                    <p class="text-gray-700">将大项目分解为小任务，设定明确的里程碑和奖励机制，增加完成的成就感。</p>
+                </div>
+                
+                <!-- 策略卡片5 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-laptop-house text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">环境隔离</h3>
+                    </div>
+                    <p class="text-gray-700">创建专注工作的环境，移除诱惑物（如烟、零食），使用网络屏蔽工具减少干扰。</p>
+                </div>
+                
+                <!-- 策略卡片6 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-brain text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">元认知监控</h3>
+                    </div>
+                    <p class="text-gray-700">培养元认知能力，当注意到自己被冲动驱动时，暂停并问自己："这真的符合我的长期利益吗？"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 反思与承诺 -->
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-center">我的反思与承诺</h2>
+            
+            <div class="mb-6">
+                <label for="reflection" class="block text-gray-700 font-medium mb-2">今日反思：我如何被冲动主导？</label>
+                <textarea id="reflection" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition" placeholder="记录今天你注意到的冲动行为..."></textarea>
+            </div>
+            
+            <div class="mb-6">
+                <label for="commitment" class="block text-gray-700 font-medium mb-2">明日承诺：我将如何应对？</label>
+                <textarea id="commitment" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition" placeholder="写下明天你将采取的具体行动..."></textarea>
+            </div>
+            
+            <button id="saveButton" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-md transition transform hover:scale-105 flex items-center justify-center mx-auto">
+                <i class="fas fa-save mr-2"></i> 保存反思
+            </button>
+        </div>
+        
+        <!-- 移除重复的返回按钮，因为头部横幅已经有了 -->
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-4">反愿景规划 - 通过识别自身不良行为模式，规划理想自我的发展路径</p>
+            <div class="flex justify-center space-x-4">
+                <a href="反愿景九宫格.html" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-home"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-question-circle"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 阅读进度条
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        });
+        
+        // 保存反思按钮
+        document.getElementById('saveButton').addEventListener('click', function() {
+            const reflection = document.getElementById('reflection').value;
+            const commitment = document.getElementById('commitment').value;
+            
+            if (reflection.trim() === '' || commitment.trim() === '') {
+                alert('请填写反思和承诺内容');
+                return;
+            }
+            
+            // 保存到本地存储
+            const date = new Date().toISOString().split('T')[0];
+            const savedData = JSON.parse(localStorage.getItem('reflections') || '{}');
+            
+            savedData[date] = {
+                category: '冲动主导',
+                reflection: reflection,
+                commitment: commitment
+            };
+            
+            localStorage.setItem('reflections', JSON.stringify(savedData));
+            
+            // 显示成功消息
+            alert('反思已保存！');
+            
+            // 清空输入框
+            document.getElementById('reflection').value = '';
+            document.getElementById('commitment').value = '';
+        });
+        
+        // 加载页面时检查是否有今日的反思
+        document.addEventListener('DOMContentLoaded', function() {
+            const date = new Date().toISOString().split('T')[0];
+            const savedData = JSON.parse(localStorage.getItem('reflections') || '{}');
+            
+            if (savedData[date] && savedData[date].category === '冲动主导') {
+                document.getElementById('reflection').value = savedData[date].reflection || '';
+                document.getElementById('commitment').value = savedData[date].commitment || '';
+            }
+        });
+    </script>
+</body>
+</html>

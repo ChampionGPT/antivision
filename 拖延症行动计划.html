@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拖延症行动计划 - 反愿景详情</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --blue-color: #3b82f6;
+            --blue-light: #dbeafe;
+            --blue-dark: #1e40af;
+            --green-color: #10b981;
+            --green-light: #d1fae5;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        
+        .gradient-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .back-button {
+            transition: all 0.2s ease;
+        }
+        
+        .back-button:hover {
+            transform: translateX(-3px);
+        }
+        
+        /* 进度条样式 */
+        .progress-container {
+            height: 5px;
+            width: 100%;
+            background-color: #f1f5f9;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background-color: var(--blue-color);
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+        
+        /* 周进度条 */
+        .week-progress {
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .week-progress-bar {
+            height: 100%;
+            background-color: var(--green-color);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        /* 习惯追踪器 */
+        .habit-tracker {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .habit-day {
+            aspect-ratio: 1;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .habit-day.completed {
+            background-color: var(--green-color);
+            color: white;
+        }
+        
+        .habit-day.missed {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .habit-day.future {
+            background-color: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+        
+        .habit-day.today {
+            border: 2px solid var(--blue-color);
+        }
+        
+        /* 目标卡片 */
+        .goal-card {
+            border-left: 4px solid var(--blue-color);
+            transition: all 0.3s ease;
+        }
+        
+        .goal-card:hover {
+            background-color: var(--blue-light);
+        }
+        
+        /* 时间线 */
+        .timeline {
+            position: relative;
+            margin-left: 20px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background-color: #e2e8f0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -8px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid var(--blue-color);
+        }
+        
+        .timeline-item.completed::before {
+            background-color: var(--green-color);
+            border-color: var(--green-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- 阅读进度条 -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <div class="container mx-auto px-4 py-6">
+        <a href="拖延症.html" class="back-button inline-flex items-center text-blue-600 hover:text-blue-800">
+            <i class="fas fa-arrow-left mr-2"></i> 返回拖延症详情
+        </a>
+    </div>
+
+    <!-- 英雄区域 -->
+    <div class="relative h-60 md:h-72 mb-12 overflow-hidden">
+        <img src="https://source.unsplash.com/1600x900/?planning,action" alt="拖延症行动计划" class="w-full h-full object-cover">
+        <div class="absolute inset-0 gradient-overlay flex flex-col justify-center items-center text-white p-6 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">拖延症行动计划</h1>
+            <p class="text-lg md:text-xl max-w-3xl opacity-90">从认知到行动，21天养成新习惯，告别拖延</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 pb-16">
+        <!-- 21天计划概览 -->
+        <div class="mb-12 max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600 flex items-center">
+                <i class="fas fa-calendar-alt mr-3"></i>21天行动计划概览
+            </h2>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-lg font-medium">当前进度</h3>
+                        <span id="weekPercentage" class="text-green-600 font-bold">0%</span>
+                    </div>
+                    <div class="week-progress">
+                        <div id="weekProgressBar" class="week-progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-blue-50 rounded-lg p-4 text-center">
+                        <h4 class="text-blue-600 font-medium mb-2">第1-7天</h4>
+                        <p class="text-gray-700">建立意识与基础习惯</p>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-4 text-center">
+                        <h4 class="text-blue-600 font-medium mb-2">第8-14天</h4>
+                        <p class="text-gray-700">强化执行力与自我对话</p>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-4 text-center">
+                        <h4 class="text-blue-600 font-medium mb-2">第15-21天</h4>
+                        <p class="text-gray-700">巩固习惯与应对挑战</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 核心习惯追踪 -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600 flex items-center">
+                <i class="fas fa-chart-line mr-3"></i>核心习惯追踪
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 习惯1：番茄工作法 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-stopwatch text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">番茄工作法</h3>
+                    </div>
+                    
+                    <p class="text-gray-700 mb-4">每天至少完成3个番茄钟（25分钟专注工作）</p>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-medium">本周进度</h4>
+                            <span id="habit1Percentage" class="text-green-600 font-bold">0/7</span>
+                        </div>
+                        <div class="habit-tracker" id="habit1Tracker">
+                            <!-- 由JavaScript生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-500">
+                        <p>点击日期标记为已完成（绿色）或未完成（红色）</p>
+                    </div>
+                </div>
+                
+                <!-- 习惯2：任务分解 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-cubes-stacked text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">任务分解</h3>
+                    </div>
+                    
+                    <p class="text-gray-700 mb-4">每天将至少一个复杂任务分解为具体小步骤</p>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-medium">本周进度</h4>
+                            <span id="habit2Percentage" class="text-green-600 font-bold">0/7</span>
+                        </div>
+                        <div class="habit-tracker" id="habit2Tracker">
+                            <!-- 由JavaScript生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-500">
+                        <p>点击日期标记为已完成（绿色）或未完成（红色）</p>
+                    </div>
+                </div>
+                
+                <!-- 习惯3：自我对话 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-comment-dots text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">自我对话</h3>
+                    </div>
+                    
+                    <p class="text-gray-700 mb-4">每天进行至少一次有效的自我对话，引导自己开始行动</p>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-medium">本周进度</h4>
+                            <span id="habit3Percentage" class="text-green-600 font-bold">0/7</span>
+                        </div>
+                        <div class="habit-tracker" id="habit3Tracker">
+                            <!-- 由JavaScript生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-500">
+                        <p>点击日期标记为已完成（绿色）或未完成（红色）</p>
+                    </div>
+                </div>
+                
+                <!-- 习惯4：环境优化 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-mobile-screen-button text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">环境优化</h3>
+                    </div>
+                    
+                    <p class="text-gray-700 mb-4">每天创建至少一次无干扰工作环境（手机静音、关闭通知）</p>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-medium">本周进度</h4>
+                            <span id="habit4Percentage" class="text-green-600 font-bold">0/7</span>
+                        </div>
+                        <div class="habit-tracker" id="habit4Tracker">
+                            <!-- 由JavaScript生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-500">
+                        <p>点击日期标记为已完成（绿色）或未完成（红色）</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 具体目标设定 -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600 flex items-center">
+                <i class="fas fa-bullseye mr-3"></i>具体目标设定
+            </h2>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium">添加新目标</h3>
+                        <button id="addGoalBtn" class="bg-blue-100 text-blue-600 hover:bg-blue-200 px-3 py-1 rounded-md transition">
+                            <i class="fas fa-plus"></i> 添加
+                        </button>
+                    </div>
+                    
+                    <div id="goalInputContainer" class="hidden mb-4">
+                        <div class="space-y-4">
+                            <input type="text" id="goalInput" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="输入目标内容...">
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-gray-700 mb-2">截止日期</label>
+                                    <input type="date" id="goalDeadline" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">目标类型</label>
+                                    <select id="goalType" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                                        <option value="work">工作相关</option>
+                                        <option value="personal">个人成长</option>
+                                        <option value="project">项目完成</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <button id="saveGoalBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">保存目标</button>
+                                <button id="cancelGoalBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md transition">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="goalsList" class="space-y-4">
+                    <!-- 目标列表将通过JavaScript动态生成 -->
+                    <div class="goal-card bg-white rounded-lg p-4 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-semibold text-lg">完成提示词库建立</h4>
+                                <p class="text-gray-600 text-sm">截止日期: 2023-12-15</p>
+                                <span class="inline-block mt-2 px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded-full">项目完成</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="text-gray-400 hover:text-green-500">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-red-500">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="goal-card bg-white rounded-lg p-4 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-semibold text-lg">完成播客稿撰写</h4>
+                                <p class="text-gray-600 text-sm">截止日期: 2023-12-10</p>
+                                <span class="inline-block mt-2 px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">工作相关</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="text-gray-400 hover:text-green-500">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-red-500">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 行动计划时间线 -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600 flex items-center">
+                <i class="fas fa-clock mr-3"></i>行动计划时间线
+            </h2>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+                <div class="timeline">
+                    <div class="timeline-item completed">
+                        <h3 class="text-lg font-semibold">第1天：建立意识</h3>
+                        <p class="text-gray-700 mt-2">识别自己的拖延模式，记录一天中的拖延行为和触发因素</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h3 class="text-lg font-semibold">第2-3天：环境优化</h3>
+                        <p class="text-gray-700 mt-2">创建无干扰工作环境，移除分心因素，设置手机使用限制</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h3 class="text-lg font-semibold">第4-7天：番茄工作法</h3>
+                        <p class="text-gray-700 mt-2">每天完成至少3个番茄钟，逐步提高专注能力</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h3 class="text-lg font-semibold">第8-10天：任务分解</h3>
+                        <p class="text-gray-700 mt-2">将复杂任务分解为小步骤，制定详细行动计划</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h3 class="text-lg font-semibold">第11-14天：自我对话</h3>
+                        <p class="text-gray-700 mt-2">培养有效的自我对话能力，通过明确的语言指令引导自己行动</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h3 class="text-lg font-semibold">第15-17天：应对挑战</h3>
+                        <p class="text-gray-700 mt-2">识别并应对可能的挫折和障碍，制定应对策略</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h3 class="text-lg font-semibold">第18-21天：巩固习惯</h3>
+                        <p class="text-gray-700 mt-2">回顾和总结21天的进展，调整和完善长期策略</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 反思日记 -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600 flex items-center">
+                <i class="fas fa-book mr-3"></i>反思日记
+            </h2>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+                <div class="mb-6">
+                    <label for="reflectionDate" class="block text-gray-700 mb-2">日期</label>
+                    <input type="date" id="reflectionDate" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                </div>
+                
+                <div class="mb-6">
+                    <label for="reflectionContent" class="block text-gray-700 mb-2">今日反思</label>
+                    <textarea id="reflectionContent" rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="记录今天的进展、挑战和感受..."></textarea>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2">今日评分</label>
+                    <div class="flex gap-2">
+                        <button class="rating-btn w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition" data-rating="1">1</button>
+                        <button class="rating-btn w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition" data-rating="2">2</button>
+                        <button class="rating-btn w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition" data-rating="3">3</button>
+                        <button class="rating-btn w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition" data-rating="4">4</button>
+                        <button class="rating-btn w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition" data-rating="5">5</button>
+                    </div>
+                </div>
+                
+                <div class="flex gap-2">
+                    <button id="saveReflectionBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">保存反思</button>
+                    <button id="clearReflectionBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md transition">清空</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 返回按钮 -->
+        <div class="text-center">
+            <a href="拖延症.html" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
+                <i class="fas fa-arrow-left mr-2"></i> 返回拖延症详情
+            </a>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-4">反愿景规划 - 通过识别自身不良行为模式，规划理想自我的发展路径</p>
+            <div class="flex justify-center space-x-4">
+                <a href="反愿景九宫格.html" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-home"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-question-circle"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 阅读进度条
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        });
+        
+        // 习惯追踪器
+        function initHabitTrackers() {
+            const trackers = [
+                document.getElementById('habit1Tracker'),
+                document.getElementById('habit2Tracker'),
+                document.getElementById('habit3Tracker'),
+                document.getElementById('habit4Tracker')
+            ];
+            
+            const percentages = [
+                document.getElementById('habit1Percentage'),
+                document.getElementById('habit2Percentage'),
+                document.getElementById('habit3Percentage'),
+                document.getElementById('habit4Percentage')
+            ];
+            
+            // 获取当前日期
+            const today = new Date();
+            const currentDay = today.getDay(); // 0是周日，1是周一，以此类推
+            
+            // 为每个习惯追踪器创建日期格子
+            trackers.forEach((tracker, trackerIndex) => {
+                tracker.innerHTML = '';
+                
+                // 创建周一到周日的格子
+                for (let i = 0; i < 7; i++) {
+                    const dayElement = document.createElement('div');
+                    const dayNames = ['日', '一', '二', '三', '四', '五', '六'];
+                    dayElement.textContent = dayNames[i];
+                    
+                    // 设置样式类
+                    if (i < currentDay) {
+                        // 过去的日期
+                        dayElement.className = 'habit-day bg-gray-200';
+                        dayElement.setAttribute('data-day', i);
+                        dayElement.setAttribute('data-tracker', trackerIndex);
+                    } else if (i === currentDay) {
+                        // 今天
+                        dayElement.className = 'habit-day bg-gray-200 today';
+                        dayElement.setAttribute('data-day', i);
+                        dayElement.setAttribute('data-tracker', trackerIndex);
+                    } else {
+                        // 未来的日期
+                        dayElement.className = 'habit-day future';
+                    }
+                    
+                    // 添加点击事件（仅对过去和今天的日期有效）
+                    if (i <= currentDay) {
+                        dayElement.addEventListener('click', function() {
+                            const day = this.getAttribute('data-day');
+                            const tracker = this.getAttribute('data-tracker');
+                            
+                            // 切换状态
+                            if (this.classList.contains('completed')) {
+                                this.classList.remove('completed');
+                                this.classList.add('missed');
+                            } else if (this.classList.contains('missed')) {
+                                this.classList.remove('missed');
+                                this.classList.add('bg-gray-200');
+                            } else {
+                                this.classList.remove('bg-gray-200');
+                                this.classList.add('completed');
+                            }
+                            
+                            // 更新进度
+                            updateHabitProgress(tracker);
+                        });
+                    }
+                    
+                    tracker.appendChild(dayElement);
+                }
+            });
+            
+            // 初始化进度
+            updateAllHabitProgress();
+        }
+        
+        // 更新单个习惯的进度
+        function updateHabitProgress(trackerIndex) {
+            const tracker = document.getElementById(`habit${parseInt(trackerIndex) + 1}Tracker`);
+            const percentageElement = document.getElementById(`habit${parseInt(trackerIndex) + 1}Percentage`);
+            
+            let completed = 0;
+            const days = tracker.querySelectorAll('.habit-day:not(.future)');
+            
+            days.forEach(day => {
+                if (day.classList.contains('completed')) {
+                    completed++;
+                }
+            });
+            
+            percentageElement.textContent = `${completed}/${days.length}`;
+            
+            // 更新总体进度
+            updateWeekProgress();
+        }
+        
+        // 更新所有习惯的进度
+        function updateAllHabitProgress() {
+            for (let i = 0; i < 4; i++) {
+                updateHabitProgress(i);
+            }
+        }
+        
+        // 更新周进度
+        function updateWeekProgress() {
+            let totalCompleted = 0;
+            let totalDays = 0;
+            
+            for (let i = 1; i <= 4; i++) {
+                const percentageElement = document.getElementById(`habit${i}Percentage`);
+                const text = percentageElement.textContent;
+                const [completed, total] = text.split('/').map(Number);
+                
+                totalCompleted += completed;
+                totalDays += total;
+            }
+            
+            const percentage = totalDays > 0 ? Math.round((totalCompleted / totalDays) * 100) : 0;
+            
+            document.getElementById('weekPercentage').textContent = `${percentage}%`;
+            document.getElementById('weekProgressBar').style.width = `${percentage}%`;
+        }
+        
+        // 目标管理
+        function initGoalManagement() {
+            const addGoalBtn = document.getElementById('addGoalBtn');
+            const saveGoalBtn = document.getElementById('saveGoalBtn');
+            const cancelGoalBtn = document.getElementById('cancelGoalBtn');
+            const goalInputContainer = document.getElementById('goalInputContainer');
+            
+            // 显示目标输入表单
+            addGoalBtn.addEventListener('click', function() {
+                goalInputContainer.classList.remove('hidden');
+            });
+            
+            // 取消添加目标
+            cancelGoalBtn.addEventListener('click', function() {
+                goalInputContainer.classList.add('hidden');
+                clearGoalForm();
+            });
+            
+            // 保存目标
+            saveGoalBtn.addEventListener('click', function() {
+                const goalInput = document.getElementById('goalInput');
+                const goalDeadline = document.getElementById('goalDeadline');
+                const goalType = document.getElementById('goalType');
+                
+                if (goalInput.value.trim() === '') {
+                    alert('请输入目标内容');
+                    return;
+                }
+                
+                if (goalDeadline.value === '') {
+                    alert('请选择截止日期');
+                    return;
+                }
+                
+                // 创建新目标
+                addGoal(goalInput.value, goalDeadline.value, goalType.value);
+                
+                // 清空表单并隐藏
+                clearGoalForm();
+                goalInputContainer.classList.add('hidden');
+            });
+            
+            // 为示例目标添加事件监听器
+            initExampleGoals();
+        }
+        
+        // 清空目标表单
+        function clearGoalForm() {
+            document.getElementById('goalInput').value = '';
+            document.getElementById('goalDeadline').value = '';
+            document.getElementById('goalType').value = 'work';
+        }
+        
+        // 添加目标
+        function addGoal(content, deadline, type) {
+            const goalsList = document.getElementById('goalsList');
+            
+            // 格式化日期
+            const formattedDate = new Date(deadline).toLocaleDateString('zh-CN');
+            
+            // 确定类型标签的样式
+            let typeClass = '';
+            let typeText = '';
+            
+            switch (type) {
+                case 'work':
+                    typeClass = 'bg-green-100 text-green-600';
+                    typeText = '工作相关';
+                    break;
+                case 'personal':
+                    typeClass = 'bg-purple-100 text-purple-600';
+                    typeText = '个人成长';
+                    break;
+                case 'project':
+                    typeClass = 'bg-blue-100 text-blue-600';
+                    typeText = '项目完成';
+                    break;
+            }
+            
+            // 创建目标元素
+            const goalElement = document.createElement('div');
+            goalElement.className = 'goal-card bg-white rounded-lg p-4 shadow-sm';
+            goalElement.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h4 class="font-semibold text-lg">${content}</h4>
+                        <p class="text-gray-600 text-sm">截止日期: ${formattedDate}</p>
+                        <span class="inline-block mt-2 px-2 py-1 ${typeClass} text-xs rounded-full">${typeText}</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="text-gray-400 hover:text-green-500 complete-goal">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="text-gray-400 hover:text-red-500 delete-goal">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // 添加到目标列表
+            goalsList.prepend(goalElement);
+            
+            // 添加事件监听器
+            addGoalEventListeners(goalElement);
+        }
+        
+        // 为目标添加事件监听器
+        function addGoalEventListeners(goalElement) {
+            // 完成目标
+            const completeBtn = goalElement.querySelector('.complete-goal');
+            completeBtn.addEventListener('click', function() {
+                goalElement.classList.toggle('opacity-50');
+                const goalTitle = goalElement.querySelector('h4');
+                goalTitle.classList.toggle('line-through');
+            });
+            
+            // 删除目标
+            const deleteBtn = goalElement.querySelector('.delete-goal');
+            deleteBtn.addEventListener('click', function() {
+                if (confirm('确定要删除这个目标吗？')) {
+                    goalElement.remove();
+                }
+            });
+        }
+        
+        // 初始化示例目标
+        function initExampleGoals() {
+            const exampleGoals = document.querySelectorAll('.goal-card');
+            
+            exampleGoals.forEach(goal => {
+                addGoalEventListeners(goal);
+            });
+        }
+        
+        // 反思日记
+        function initReflectionJournal() {
+            const saveReflectionBtn = document.getElementById('saveReflectionBtn');
+            const clearReflectionBtn = document.getElementById('clearReflectionBtn');
+            const ratingBtns = document.querySelectorAll('.rating-btn');
+            
+            // 设置默认日期为今天
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('reflectionDate').value = today;
+            
+            // 评分按钮
+            ratingBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的选中状态
+                    ratingBtns.forEach(b => {
+                        b.classList.remove('bg-blue-500', 'text-white');
+                        b.classList.add('bg-gray-200');
+                    });
+                    
+                    // 设置当前按钮为选中状态
+                    this.classList.remove('bg-gray-200');
+                    this.classList.add('bg-blue-500', 'text-white');
+                });
+            });
+            
+            // 保存反思
+            saveReflectionBtn.addEventListener('click', function() {
+                const date = document.getElementById('reflectionDate').value;
+                const content = document.getElementById('reflectionContent').value;
+                let rating = null;
+                
+                // 获取选中的评分
+                ratingBtns.forEach(btn => {
+                    if (btn.classList.contains('bg-blue-500')) {
+                        rating = btn.getAttribute('data-rating');
+                    }
+                });
+                
+                if (date === '') {
+                    alert('请选择日期');
+                    return;
+                }
+                
+                if (content.trim() === '') {
+                    alert('请输入反思内容');
+                    return;
+                }
+                
+                if (rating === null) {
+                    alert('请选择评分');
+                    return;
+                }
+                
+                // 保存到本地存储
+                saveReflection(date, content, rating);
+                
+                alert('反思已保存');
+            });
+            
+            // 清空反思
+            clearReflectionBtn.addEventListener('click', function() {
+                document.getElementById('reflectionContent').value = '';
+                
+                // 重置评分按钮
+                ratingBtns.forEach(btn => {
+                    btn.classList.remove('bg-blue-500', 'text-white');
+                    btn.classList.add('bg-gray-200');
+                });
+            });
+        }
+        
+        // 保存反思到本地存储
+        function saveReflection(date, content, rating) {
+            // 获取现有的反思
+            let reflections = JSON.parse(localStorage.getItem('reflections')) || {};
+            
+            // 添加或更新反思
+            reflections[date] = {
+                content: content,
+                rating: rating,
+                timestamp: new Date().getTime()
+            };
+            
+            // 保存到本地存储
+            localStorage.setItem('reflections', JSON.stringify(reflections));
+        }
+        
+        // 加载反思
+        function loadReflection(date) {
+            // 获取现有的反思
+            let reflections = JSON.parse(localStorage.getItem('reflections')) || {};
+            
+            // 检查是否存在该日期的反思
+            if (reflections[date]) {
+                const reflection = reflections[date];
+                
+                // 设置内容
+                document.getElementById('reflectionContent').value = reflection.content;
+                
+                // 设置评分
+                const ratingBtns = document.querySelectorAll('.rating-btn');
+                ratingBtns.forEach(btn => {
+                    if (btn.getAttribute('data-rating') === reflection.rating) {
+                        btn.classList.remove('bg-gray-200');
+                        btn.classList.add('bg-blue-500', 'text-white');
+                    } else {
+                        btn.classList.remove('bg-blue-500', 'text-white');
+                        btn.classList.add('bg-gray-200');
+                    }
+                });
+                
+                return true;
+            }
+            
+            return false;
+        }
+        
+        // 日期变更时加载对应的反思
+        function initReflectionDateChange() {
+            const dateInput = document.getElementById('reflectionDate');
+            
+            dateInput.addEventListener('change', function() {
+                const date = this.value;
+                
+                // 尝试加载该日期的反思
+                if (!loadReflection(date)) {
+                    // 如果不存在，则清空表单
+                    document.getElementById('reflectionContent').value = '';
+                    
+                    // 重置评分按钮
+                    const ratingBtns = document.querySelectorAll('.rating-btn');
+                    ratingBtns.forEach(btn => {
+                        btn.classList.remove('bg-blue-500', 'text-white');
+                        btn.classList.add('bg-gray-200');
+                    });
+                }
+            });
+        }
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化习惯追踪器
+            initHabitTrackers();
+            
+            // 初始化目标管理
+            initGoalManagement();
+            
+            // 初始化反思日记
+            initReflectionJournal();
+            
+            // 初始化反思日期变更
+            initReflectionDateChange();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>反愿景规划 - 通过识别不良行为模式，规划理想自我</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --red-color: #dc2626;
+            --orange-color: #ea580c;
+            --yellow-color: #ca8a04;
+            --cyan-color: #0891b2;
+            --green-color: #16a34a;
+            --purple-color: #9333ea;
+            --blue-color: #2563eb;
+            --pink-color: #db2777;
+            --gray-color: #4b5563;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* 导航栏样式 */
+        .navbar {
+            width: 100%;
+            background-color: #1e293b;
+            color: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar-logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-logo i {
+            margin-right: 0.5rem;
+            color: #10b981;
+        }
+        
+        .navbar-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .navbar-link {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.2s;
+            font-size: 0.9rem;
+        }
+        
+        .navbar-link:hover {
+            color: white;
+        }
+        
+        .navbar-link.active {
+            color: white;
+            font-weight: 500;
+            border-bottom: 2px solid #10b981;
+        }
+        
+        /* 移动端菜单按钮 */
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* 英雄区域样式 */
+        .hero {
+            position: relative;
+            width: 100%;
+            background-color: #1e293b;
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://source.unsplash.com/1600x900/?mindfulness,growth');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.2;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #059669;
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 内容区域样式 */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 2rem 1rem;
+        }
+        
+        .section {
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 0.75rem;
+            color: #10b981;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* 九宫格导航样式 */
+        .grid-nav {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .grid-item {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #1e293b;
+            aspect-ratio: 1 / 1;
+        }
+        
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .grid-item i {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .grid-item-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .grid-item-desc {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        /* 颜色样式 */
+        .color-red { color: var(--red-color); }
+        .color-orange { color: var(--orange-color); }
+        .color-yellow { color: var(--yellow-color); }
+        .color-cyan { color: var(--cyan-color); }
+        .color-green { color: var(--green-color); }
+        .color-purple { color: var(--purple-color); }
+        .color-blue { color: var(--blue-color); }
+        .color-pink { color: var(--pink-color); }
+        .color-gray { color: var(--gray-color); }
+        
+        .bg-red { background-color: #fee2e2; }
+        .bg-orange { background-color: #ffedd5; }
+        .bg-yellow { background-color: #fef9c3; }
+        .bg-cyan { background-color: #cffafe; }
+        .bg-green { background-color: #dcfce7; }
+        .bg-purple { background-color: #f3e8ff; }
+        .bg-blue { background-color: #dbeafe; }
+        .bg-pink { background-color: #fce7f3; }
+        .bg-gray { background-color: #f3f4f6; }
+        
+        /* 步骤指引样式 */
+        .steps {
+            counter-reset: step;
+            margin-top: 1.5rem;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .step-number {
+            flex-shrink: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: #10b981;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+        
+        .step-number::before {
+            counter-increment: step;
+            content: counter(step);
+        }
+        
+        .step-content {
+            flex-grow: 1;
+            padding-bottom: 1.5rem;
+        }
+        
+        .step:not(:last-child) .step-content::before {
+            content: "";
+            position: absolute;
+            left: 1.25rem;
+            top: 2.5rem;
+            bottom: 0;
+            width: 2px;
+            background-color: #e2e8f0;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+        
+        /* 页脚样式 */
+        .footer {
+            background-color: #1e293b;
+            color: white;
+            padding: 2rem 1rem;
+            width: 100%;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-text {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none;
+            }
+            
+            .menu-button {
+                display: block;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .grid-nav {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            /* 中心格子占据两列 */
+            .grid-item-5 {
+                grid-column: span 2;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .grid-nav {
+                grid-template-columns: 1fr;
+            }
+            
+            /* 重置中心格子 */
+            .grid-item-5 {
+                grid-column: auto;
+            }
+            
+            .hero-title {
+                font-size: 1.75rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <i class="fas fa-bullseye"></i>
+                <span>反愿景规划</span>
+            </div>
+            <div class="navbar-links">
+                <a href="index.html" class="navbar-link active">首页</a>
+                <a href="反愿景九宫格.html" class="navbar-link">九宫格总览</a>
+                <a href="#concept" class="navbar-link">概念介绍</a>
+                <a href="#guide" class="navbar-link">使用指南</a>
+            </div>
+            <button class="menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">反愿景规划：识别不良模式，塑造理想自我</h1>
+            <p class="hero-subtitle">通过系统化方法识别自身不良行为模式，规划理想自我的发展路径</p>
+            <div class="hero-buttons">
+                <a href="反愿景九宫格.html" class="btn btn-primary">
+                    <i class="fas fa-th"></i> 查看九宫格
+                </a>
+                <a href="#guide" class="btn btn-secondary">
+                    <i class="fas fa-book"></i> 使用指南
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 主要内容区域 -->
+    <div class="container">
+        <!-- 概念介绍部分 -->
+        <section id="concept" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-lightbulb"></i>
+                反愿景规划概念
+            </h2>
+            <div class="card">
+                <h3 class="card-title">什么是反愿景规划？</h3>
+                <p>反愿景规划是一种自我成长方法，通过识别和分析自身不良行为模式，反向推导出理想自我的发展路径。与传统的目标设定不同，反愿景规划首先关注"我不想成为什么样的人"，然后通过避免这些不良模式，塑造理想自我。</p>
+                <br>
+                <p>这种方法特别适合那些：</p>
+                <ul class="list-disc pl-5 mt-2 space-y-1">
+                    <li>对自己的行为模式感到困惑的人</li>
+                    <li>尝试过多种自我提升方法但效果不佳的人</li>
+                    <li>希望系统化改善自己但不知从何开始的人</li>
+                    <li>容易陷入相同错误模式的人</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3 class="card-title">嵌套九宫格模型</h3>
+                <p>我们使用嵌套九宫格模型来可视化不良行为模式及其细节。这个模型包括：</p>
+                <ul class="list-disc pl-5 mt-2 space-y-1">
+                    <li>外层九宫格：代表9个主要问题领域</li>
+                    <li>内层九宫格：每个问题领域内的8个具体不良行为</li>
+                    <li>中心格：代表理想自我的核心特质</li>
+                </ul>
+                <p class="mt-3">通过这种嵌套结构，我们可以同时看到宏观问题和微观行为，帮助我们更全面地理解自己的行为模式。</p>
+            </div>
+        </section>
+        
+        <!-- 九宫格导航部分 -->
+        <section class="section">
+            <h2 class="section-title">
+                <i class="fas fa-th"></i>
+                九宫格问题领域
+            </h2>
+            <p>点击下方任一区域，深入了解具体问题及其解决方案：</p>
+            
+            <div class="grid-nav">
+                <!-- 1. 冲动主导 & 浅尝辄止 -->
+                <a href="冲动主导与浅尝辄止.html" class="grid-item bg-red">
+                    <i class="fas fa-bolt color-red"></i>
+                    <div class="grid-item-title color-red">冲动主导 & 浅尝辄止</div>
+                    <div class="grid-item-desc">控制冲动，培养专注与坚持</div>
+                </a>
+                
+                <!-- 2. 重复错误 & 缺乏远见 -->
+                <a href="重复错误与缺乏远见.html" class="grid-item bg-orange">
+                    <i class="fas fa-redo-alt color-orange"></i>
+                    <div class="grid-item-title color-orange">重复错误 & 缺乏远见</div>
+                    <div class="grid-item-desc">打破恶性循环，建立长远视角</div>
+                </a>
+                
+                <!-- 3. 内在无序 & 行动盲目 -->
+                <a href="内在无序与行动盲目.html" class="grid-item bg-yellow">
+                    <i class="fas fa-random color-yellow"></i>
+                    <div class="grid-item-title color-yellow">内在无序 & 行动盲目</div>
+                    <div class="grid-item-desc">建立内在秩序，明确行动方向</div>
+                </a>
+                
+                <!-- 4. 时间管理混乱 -->
+                <a href="时间管理混乱.html" class="grid-item bg-cyan">
+                    <i class="fas fa-clock-rotate-left color-cyan"></i>
+                    <div class="grid-item-title color-cyan">时间管理混乱</div>
+                    <div class="grid-item-desc">掌控时间，提高效率与规律</div>
+                </a>
+                
+                <!-- 5. 理想自我（中心） -->
+                <a href="反愿景九宫格.html" class="grid-item bg-green grid-item-5">
+                    <i class="fas fa-bullseye color-green"></i>
+                    <div class="grid-item-title color-green">理想自我</div>
+                    <div class="grid-item-desc">专注·自律·健康·有序·成长·和谐·远见·行动力</div>
+                </a>
+                
+                <!-- 6. 情绪奴隶 & 动力荒漠 -->
+                <a href="情绪奴隶与动力荒漠.html" class="grid-item bg-purple">
+                    <i class="fas fa-battery-empty color-purple"></i>
+                    <div class="grid-item-title color-purple">情绪奴隶 & 动力荒漠</div>
+                    <div class="grid-item-desc">情绪管理，激发内在动力</div>
+                </a>
+                
+                <!-- 7. 人际关系困扰 -->
+                <a href="人际关系困扰.html" class="grid-item bg-blue">
+                    <i class="fas fa-user-group-slash color-blue"></i>
+                    <div class="grid-item-title color-blue">人际关系困扰</div>
+                    <div class="grid-item-desc">改善沟通，建立健康关系</div>
+                </a>
+                
+                <!-- 8. 健康习惯忽视 -->
+                <a href="健康习惯忽视.html" class="grid-item bg-pink">
+                    <i class="fas fa-heart-crack color-pink"></i>
+                    <div class="grid-item-title color-pink">健康习惯忽视</div>
+                    <div class="grid-item-desc">建立健康生活方式</div>
+                </a>
+                
+                <!-- 9. 无规划 & 解难乏力 -->
+                <a href="无规划与解难乏力.html" class="grid-item bg-gray">
+                    <i class="fas fa-map color-gray"></i>
+                    <div class="grid-item-title color-gray">无规划 & 解难乏力</div>
+                    <div class="grid-item-desc">系统规划，提升解决问题能力</div>
+                </a>
+            </div>
+        </section>
+        
+        <!-- 使用指南部分 -->
+        <section id="guide" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-book"></i>
+                使用指南
+            </h2>
+            <div class="card">
+                <h3 class="card-title">如何使用反愿景规划</h3>
+                
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number"></div>
+                        <div class="step-content">
+                            <h4 class="step-title">浏览九宫格总览</h4>
+                            <p>首先查看<a href="反愿景九宫格.html" class="text-green-600 hover:underline">九宫格总览</a>，了解所有问题领域。识别哪些问题与你最相关，找出你最需要改进的2-3个领域。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number"></div>
+                        <div class="step-content">
+                            <h4 class="step-title">深入研究具体问题</h4>
+                            <p>点击进入你最需要改进的问题领域页面，详细了解具体行为模式、成因和解决方案。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number"></div>
+                        <div class="step-content">
+                            <h4 class="step-title">制定个人行动计划</h4>
+                            <p>根据每个问题页面提供的解决方案，制定适合自己的具体行动计划。从小目标开始，逐步建立新习惯。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number"></div>
+                        <div class="step-content">
+                            <h4 class="step-title">定期回顾与调整</h4>
+                            <p>每周回顾自己的进展，记录成功与挑战。根据实际情况调整行动计划，确保持续改进。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number"></div>
+                        <div class="step-content">
+                            <h4 class="step-title">扩展到其他问题领域</h4>
+                            <p>当你在最初的问题领域取得进展后，逐步扩展到其他领域，全面提升自我。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3 class="card-title">最佳实践建议</h3>
+                <ul class="list-disc pl-5 mt-2 space-y-2">
+                    <li><strong>聚焦少数问题</strong>：同时解决太多问题会分散注意力，建议一次专注于2-3个最重要的问题领域。</li>
+                    <li><strong>具体化行动</strong>：将解决方案转化为具体、可衡量的行动步骤，避免模糊不清的计划。</li>
+                    <li><strong>建立反馈循环</strong>：设置定期检查点，评估进展并调整方法。</li>
+                    <li><strong>寻求支持</strong>：与朋友、家人或专业人士分享你的计划，获取支持和反馈。</li>
+                    <li><strong>庆祝进步</strong>：无论大小，都要认可和庆祝每一步的进步，这有助于保持动力。</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-text">© 2023 反愿景规划 - 通过识别不良行为模式，规划理想自我</div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // 移动端菜单切换
+        document.querySelector('.menu-button').addEventListener('click', function() {
+            const navLinks = document.querySelector('.navbar-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

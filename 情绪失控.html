@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情绪失控 & 自我否定 - 反愿景详情</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --yellow-color: #ca8a04;
+            --yellow-light: #fef9c3;
+            --yellow-dark: #854d0e;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        
+        .gradient-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .behavior-card {
+            border-left: 4px solid var(--yellow-color);
+            transition: all 0.3s ease;
+        }
+        
+        .behavior-card:hover {
+            background-color: var(--yellow-light);
+        }
+        
+        .quote-card {
+            background-color: var(--yellow-light);
+            border-radius: 1rem;
+            position: relative;
+        }
+        
+        .quote-card::before {
+            content: """;
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            font-size: 5rem;
+            color: var(--yellow-color);
+            opacity: 0.3;
+            font-family: serif;
+        }
+        
+        .strategy-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .strategy-card:hover {
+            border-color: var(--yellow-color);
+            background-color: #fff;
+        }
+        
+        .back-button {
+            transition: all 0.2s ease;
+        }
+        
+        .back-button:hover {
+            transform: translateX(-3px);
+        }
+        
+        /* 进度条样式 */
+        .progress-container {
+            height: 5px;
+            width: 100%;
+            background-color: #f1f5f9;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background-color: var(--yellow-color);
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+        
+        /* 情绪温度计 */
+        .emotion-thermometer {
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(to right, #4ade80, #facc15, #f87171);
+            border-radius: 20px;
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .emotion-marker {
+            position: absolute;
+            top: -15px;
+            width: 20px;
+            height: 70px;
+            background-color: white;
+            border: 2px solid #334155;
+            border-radius: 4px;
+            transform: translateX(-50%);
+            cursor: pointer;
+            transition: left 0.3s ease;
+        }
+        
+        .emotion-marker::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #334155;
+        }
+    </style>
+</head>
+<body>
+    <!-- 阅读进度条 -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <div class="container mx-auto px-4 py-6">
+        <a href="反愿景九宫格.html" class="back-button inline-flex items-center text-yellow-600 hover:text-yellow-800">
+            <i class="fas fa-arrow-left mr-2"></i> 返回九宫格
+        </a>
+    </div>
+
+    <!-- 英雄区域 -->
+    <div class="relative h-80 md:h-96 mb-12 overflow-hidden">
+        <img src="https://source.unsplash.com/1600x900/?emotion,stress" alt="情绪失控与自我否定" class="w-full h-full object-cover">
+        <div class="absolute inset-0 gradient-overlay flex flex-col justify-center items-center text-white p-6 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">情绪失控 & 自我否定</h1>
+            <p class="text-lg md:text-xl max-w-3xl opacity-90">难以有效调节情绪，容易被负面情绪淹没，同时倾向于过度自我批评和否定，无法客观评价自己的能力和价值</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 pb-16">
+        <!-- 核心问题描述 - 更新为更个性化的内容 -->
+        <div class="mb-12 max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold mb-6 text-yellow-600 flex items-center">
+                <i class="fas fa-exclamation-circle mr-3"></i>核心问题
+            </h2>
+            <div class="quote-card p-6 md:p-8">
+                <p class="text-lg leading-relaxed">
+                    在压力或挫折面前，情绪波动剧烈，难以保持冷静和理性。尤其在与家人沟通不畅时容易爆发冲突，说出伤人的话。倾向于过度自我批评，将失败归因于自身能力不足。长期被负面情绪（焦虑、沮丧、烦躁、愤怒）困扰，特别是在面对压力、工作不顺或计划被打乱时，严重影响日常生活和工作状态。
+                </p>
+            </div>
+        </div>
+
+        <!-- 具体行为表现 - 替换为更符合个人情况的卡片 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-yellow-600 flex items-center">
+                <i class="fas fa-bolt mr-3"></i>具体行为表现
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 行为卡片1 - 家庭冲突 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-house-chimney-crack text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">家庭冲突</h3>
+                    </div>
+                    <p class="text-gray-700">与家人（尤其是母亲）沟通不畅时容易爆发情绪冲突，说出难听的话，事后感到后悔但难以控制当时的爆发。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-yellow-500"></i>
+                        <span>触发因素：沟通不畅、被误解、压力积累</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片2 - 工作情绪波动 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-briefcase-medical text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">工作情绪波动</h3>
+                    </div>
+                    <p class="text-gray-700">对外勤等无聊工作缺乏耐心，同事指挥混乱时感到不爽，容易在工作环境中表现出负面情绪，影响团队氛围。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-yellow-500"></i>
+                        <span>触发因素：无聊任务、混乱指令、疲劳</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片3 - 社交疲惫 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-user-group-simple text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">社交疲惫</h3>
+                    </div>
+                    <p class="text-gray-700">与朋友聊天时感到疲惫不想继续，观影会后聚会感到无聊，对朋友接待方式不满，想要离场，社交场合情绪波动明显。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-yellow-500"></i>
+                        <span>触发因素：社交期待与现实不符、能量耗尽</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片4 - 计划受阻烦躁 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-calendar-xmark text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">计划受阻烦躁</h3>
+                    </div>
+                    <p class="text-gray-700">当计划被打乱（如电脑性能瓶颈影响视频剪辑效率）时感到烦躁不安，缺乏应对突发状况的预案，导致整体计划泡汤。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-yellow-500"></i>
+                        <span>触发因素：技术问题、计划变更、时间压力</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片5 - 下午困乏烦躁 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-bed text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">下午困乏烦躁</h3>
+                    </div>
+                    <p class="text-gray-700">下午时段经常感到困乏烦躁，能量水平低下，难以集中精力，严重影响执行力，容易因此陷入负面情绪循环。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-yellow-500"></i>
+                        <span>触发因素：睡眠不足、饮食问题、生理节律</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片6 - 外部压力焦虑 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-scale-unbalanced text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">外部压力焦虑</h3>
+                    </div>
+                    <p class="text-gray-700">因外部压力（如物业费律师函）而陷入焦虑沮丧状态，提不起精神，难以专注于日常工作，情绪低落持续时间长。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-yellow-500"></i>
+                        <span>触发因素：法律问题、财务压力、未解决冲突</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 负面影响 - 修改标题错误并更新内容 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-yellow-600 flex items-center">
+                <i class="fas fa-arrow-trend-down mr-3"></i>负面事件
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 影响卡片1 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-heart-crack text-red-500 mr-3"></i>家庭关系紧张
+                    </h3>
+                    <p class="text-gray-700">与家人（尤其是母亲）的情绪冲突导致家庭关系紧张，说出的伤人话语难以挽回，增加家庭成员间的隔阂和误解。</p>
+                </div>
+                
+                <!-- 影响卡片2 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-brain text-purple-500 mr-3"></i>工作效率下降
+                    </h3>
+                    <p class="text-gray-700">情绪波动和能量低下导致工作效率显著下降，特别是在下午时段，影响重要任务（如播客稿、公众号文章）的完成。</p>
+                </div>
+                
+                <!-- 影响卡片3 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-door-closed text-yellow-500 mr-3"></i>社交退缩
+                    </h3>
+                    <p class="text-gray-700">因社交场合情绪不稳定而逐渐减少社交活动，与朋友交流感到疲惫，导致社交圈缩小，支持系统减弱。</p>
+                </div>
+                
+                <!-- 影响卡片4 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-battery-quarter text-red-500 mr-3"></i>不良习惯加剧
+                    </h3>
+                    <p class="text-gray-700">情绪波动时更容易触发不良习惯（如抽烟、熬夜、暴饮暴食），形成恶性循环，进一步影响身心健康和情绪稳定。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 应对策略 - 更新为更个性化的策略 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-green-600 flex items-center">
+                <i class="fas fa-shield-alt mr-3"></i>应对策略
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 策略卡片1 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-wind text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">情绪中断技巧</h3>
+                    </div>
+                    <p class="text-gray-700">当感到情绪即将爆发（尤其是与家人交流时），立即使用"暂停"技巧：深呼吸、短暂离开现场、延迟回应，避免说出伤人话语。</p>
+                </div>
+                
+                <!-- 策略卡片2 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-book-open text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">元认知监控</h3>
+                    </div>
+                    <p class="text-gray-700">练习元认知监控技巧，在情绪波动初期识别身体信号（如心跳加速、肌肉紧张），记录触发因素，增强情绪自我觉察能力。</p>
+                </div>
+                
+                <!-- 策略卡片3 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-clock text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">能量管理</h3>
+                    </div>
+                    <p class="text-gray-700">针对下午困乏烦躁问题，调整作息和工作安排：重要任务安排在上午，下午安排轻松任务，适当休息，避免能量完全耗尽。</p>
+                </div>
+                
+                <!-- 策略卡片4 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-comments text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">沟通模板</h3>
+                    </div>
+                    <p class="text-gray-700">准备家庭沟通模板："我感到...当你...因为..."，避免指责性语言，提前演练可能的困难对话，降低情绪冲突风险。</p>
+                </div>
+                
+                <!-- 策略卡片5 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-person-walking text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">应急预案</h3>
+                    </div>
+                    <p class="text-gray-700">为常见情绪触发场景（如计划被打乱、工作不顺）制定具体应急预案，包括替代活动、调整期望、寻求支持的具体步骤。</p>
+                </div>
+                
+                <!-- 策略卡片6 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-user-friends text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">社交能量预算</h3>
+                    </div>
+                    <p class="text-gray-700">为社交活动设定明确的能量预算和边界，提前沟通期望，设定合理的社交时长，给自己恢复能量的空间和权限。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 情绪温度计 -->
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-center">今日情绪温度计</h2>
+            
+            <div class="mb-6">
+                <p class="text-gray-700 mb-4">拖动下方标记，记录你今天的情绪状态：</p>
+                
+                <div class="emotion-thermometer">
+                    <div class="emotion-marker" id="emotionMarker" style="left: 50%;"></div>
+                </div>
+                
+                <div class="flex justify-between text-sm text-gray-600 mt-2">
+                    <span>平静</span>
+                    <span>中性</span>
+                    <span>激动</span>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <label for="emotionTrigger" class="block text-gray-700 font-medium mb-2">情绪触发因素：</label>
+                <textarea id="emotionTrigger" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition" placeholder="是什么导致了今天的情绪波动？"></textarea>
+            </div>
+            
+            <div class="mb-6">
+                <label for="emotionResponse" class="block text-gray-700 font-medium mb-2">我的应对方式：</label>
+                <textarea id="emotionResponse" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition" placeholder="我如何应对这些情绪？效果如何？"></textarea>
+            </div>
+            
+            <button id="saveButton" class="bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-2 px-6 rounded-md transition transform hover:scale-105 flex items-center justify-center mx-auto">
+                <i class="fas fa-save mr-2"></i> 保存记录
+            </button>
+        </div>
+        
+        <!-- 返回按钮 -->
+        <div class="text-center">
+            <a href="反愿景九宫格.html" class="inline-flex items-center text-yellow-600 hover:text-yellow-800 font-medium">
+                <i class="fas fa-arrow-left mr-2"></i> 返回九宫格总览
+            </a>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-4">反愿景规划 - 通过识别自身不良行为模式，规划理想自我的发展路径</p>
+            <div class="flex justify-center space-x-4">
+                <a href="反愿景九宫格.html" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-home"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-question-circle"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 阅读进度条
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        });
+        
+        // 情绪温度计功能
+        const emotionMarker = document.getElementById('emotionMarker');
+        const thermometer = document.querySelector('.emotion-thermometer');
+        let isDragging = false;
+        
+        // 初始化拖动功能
+        emotionMarker.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            e.preventDefault(); // 防止文本选择
+        });
+        
+        document.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+        
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging) {
+                const thermometerRect = thermometer.getBoundingClientRect();
+                let newPosition = (e.clientX - thermometerRect.left) / thermometerRect.width * 100;
+                
+                // 限制在0-100%范围内
+                newPosition = Math.max(0, Math.min(100, newPosition));
+                
+                emotionMarker.style.left = newPosition + '%';
+            }
+        });
+        
+        // 移动设备触摸支持
+        emotionMarker.addEventListener('touchstart', function(e) {
+            isDragging = true;
+            e.preventDefault();
+        });
+        
+        document.addEventListener('touchend', function() {
+            isDragging = false;
+        });
+        
+        document.addEventListener('touchmove', function(e) {
+            if (isDragging) {
+                const thermometerRect = thermometer.getBoundingClientRect();
+                const touch = e.touches[0];
+                let newPosition = (touch.clientX - thermometerRect.left) / thermometerRect.width * 100;
+                
+                // 限制在0-100%范围内
+                newPosition = Math.max(0, Math.min(100, newPosition));
+                
+                emotionMarker.style.left = newPosition + '%';
+            }
+        });
+        
+        // 保存情绪记录按钮
+        document.getElementById('saveButton').addEventListener('click', function() {
+            const emotionPosition = parseFloat(emotionMarker.style.left);
+            const emotionTrigger = document.getElementById('emotionTrigger').value;
+            const emotionResponse = document.getElementById('emotionResponse').value;
+            
+            if (emotionTrigger.trim() === '' || emotionResponse.trim() === '') {
+                alert('请填写情绪触发因素和应对方式');
+                return;
+            }
+            
+            // 保存到本地存储
+            const date = new Date().toISOString().split('T')[0];
+            const savedData = JSON.parse(localStorage.getItem('emotionRecords') || '{}');
+            
+            savedData[date] = {
+                category: '情绪失控',
+                emotionLevel: emotionPosition,
+                trigger: emotionTrigger,
+                response: emotionResponse
+            };
+            
+            localStorage.setItem('emotionRecords', JSON.stringify(savedData));
+            
+            // 显示成功消息
+            alert('情绪记录已保存！');
+            
+            // 清空输入框
+            document.getElementById('emotionTrigger').value = '';
+            document.getElementById('emotionResponse').value = '';
+            emotionMarker.style.left = '50%'; // 重置情绪标记
+        });
+        
+        // 加载页面时检查是否有今日的情绪记录
+        document.addEventListener('DOMContentLoaded', function() {
+            const date = new Date().toISOString().split('T')[0];
+            const savedData = JSON.parse(localStorage.getItem('emotionRecords') || '{}');
+            
+            if (savedData[date] && savedData[date].category === '情绪失控') {
+                document.getElementById('emotionTrigger').value = savedData[date].trigger || '';
+                document.getElementById('emotionResponse').value = savedData[date].response || '';
+                
+                if (savedData[date].emotionLevel) {
+                    emotionMarker.style.left = savedData[date].emotionLevel + '%';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

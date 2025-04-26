@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间管理混乱 - 反愿景详情</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --cyan-color: #0891b2;
+            --cyan-light: #cffafe;
+            --cyan-dark: #0e7490;
+            --green-color: #10b981;
+            --green-light: #d1fae5;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 添加渐变背景样式 */
+        .header-gradient {
+            background: linear-gradient(135deg, var(--cyan-color), #06b6d4);
+        }
+        
+        .gradient-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .back-button {
+            transition: all 0.2s ease;
+        }
+        
+        .back-button:hover {
+            transform: translateX(-3px);
+        }
+        
+        /* 进度条样式 */
+        .progress-container {
+            height: 5px;
+            width: 100%;
+            background-color: #f1f5f9;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background-color: var(--cyan-color);
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+        
+        /* 任务进度条 */
+        .task-progress {
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .task-progress-bar {
+            height: 100%;
+            background-color: var(--cyan-color);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        /* 倒计时容器 */
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .countdown-item {
+            background-color: var(--cyan-light);
+            color: var(--cyan-dark);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .countdown-label {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            color: var(--cyan-dark);
+        }
+        
+        /* 策略卡片 */
+        .strategy-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--cyan-color);
+        }
+        
+        .strategy-card:hover {
+            background-color: var(--cyan-light);
+        }
+        
+        /* 添加导航栏样式 */
+        .action-btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline {
+            border: 1px solid currentColor;
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <!-- 阅读进度条 -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- 导航栏 - 使用重复错误与缺乏远见的样式 -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold text-gray-800 flex items-center">
+                <i class="fas fa-brain mr-2 text-cyan-600"></i>
+                反愿景计划
+            </a>
+            <div>
+                <a href="反愿景九宫格.html" class="px-3 py-2 rounded hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-th mr-1"></i>九宫格
+                </a>
+                <a href="重复错误与缺乏远见.html" class="px-3 py-2 rounded hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-redo-alt mr-1"></i>重复错误
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 头部横幅 - 使用渐变风格替代原来的图片背景 -->
+    <header class="header-gradient text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">时间管理混乱</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90 mb-6">
+                无法有效规划和利用时间，导致拖延、迟到、计划失败和效率低下
+            </p>
+            <div class="mt-6">
+                <a href="时间管理混乱行动计划.html" class="action-btn btn-outline text-white border-white hover:bg-white hover:bg-opacity-20">
+                    <i class="fas fa-arrow-right mr-2"></i>查看行动计划
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 删除原来的返回按钮，因为已经在导航栏中添加了链接 -->
+
+    <!-- 原有内容保持不变 -->
+    <div class="container mx-auto px-4 pb-16">
+        <!-- 核心问题 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-cyan-600 flex items-center">
+                <i class="fas fa-exclamation-circle mr-3"></i>核心问题
+            </h2>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+                <p class="text-gray-700 mb-6">时间管理混乱是一种常见的行为模式，表现为无法有效规划、分配和利用时间，导致拖延、迟到、计划失败和效率低下。这种状态不仅影响工作和学习效率，还会增加压力和焦虑，破坏生活质量和人际关系。</p>
+                
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-1 bg-cyan-50 p-5 rounded-lg">
+                        <h3 class="text-lg font-semibold text-cyan-700 mb-3">根本原因</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-cyan-600 mt-1 mr-2"></i>
+                                <span>缺乏时间感知能力，难以准确估计任务所需时间</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-cyan-600 mt-1 mr-2"></i>
+                                <span>计划制定不合理，未考虑缓冲时间和突发情况</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-cyan-600 mt-1 mr-2"></i>
+                                <span>优先级混乱，无法区分重要与紧急任务</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-cyan-600 mt-1 mr-2"></i>
+                                <span>执行力不足，难以坚持时间管理工具和系统</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-cyan-600 mt-1 mr-2"></i>
+                                <span>作息不规律，影响精力分配和工作效率</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="flex-1 bg-cyan-50 p-5 rounded-lg">
+                        <h3 class="text-lg font-semibold text-cyan-700 mb-3">触发因素</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-start">
+                                <i class="fas fa-exclamation-triangle text-amber-500 mt-1 mr-2"></i>
+                                <span>面对复杂任务时的不知所措和拖延</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-exclamation-triangle text-amber-500 mt-1 mr-2"></i>
+                                <span>过度 optimistic 估计自己的效率和能力</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-exclamation-triangle text-amber-500 mt-1 mr-2"></i>
+                                <span>对不感兴趣任务的回避心理</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-exclamation-triangle text-amber-500 mt-1 mr-2"></i>
+                                <span>缺乏明确的目标和动力系统</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-exclamation-triangle text-amber-500 mt-1 mr-2"></i>
+                                <span>外部干扰和打断（如社交媒体、即时通讯）</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 具体表现 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-cyan-600 flex items-center">
+                <i class="fas fa-list-alt mr-3"></i>具体表现
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 行为卡片1 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-cyan-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-list-check text-cyan-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">缺乏计划与优先级</h3>
+                    </div>
+                    <p class="text-gray-700">没有清晰、可执行的日/周/月计划和优先级排序，导致时间分配混乱，重要任务被遗漏或拖延，经常感到忙碌但成效不彰。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-amber-500"></i>
+                        <span>触发因素：目标不明确、缺乏规划习惯</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片2 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-cyan-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-person-running text-cyan-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">高估效率</h3>
+                    </div>
+                    <p class="text-gray-700">过度乐观估计自己的工作效率和完成速度，导致计划频繁失败，任务堆积，增加压力和挫败感，形成恶性循环。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-amber-500"></i>
+                        <span>触发因素：缺乏自我认知、过度自信</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片3 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-cyan-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-question text-cyan-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">难以预估耗时</h3>
+                    </div>
+                    <p class="text-gray-700">无法准确估计任务所需时间，特别是对复杂项目（如AI应用设计、课程大纲构思、视频剪辑），导致计划不切实际，执行困难。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-amber-500"></i>
+                        <span>触发因素：缺乏经验记录、未考虑复杂性</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片4 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-cyan-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-moon text-cyan-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">晚睡晚起</h3>
+                    </div>
+                    <p class="text-gray-700">作息不规律，经常熬夜（如深夜刷手机、喝酒、吃宵夜到凌晨），导致次日精神状态差，影响工作效率和情绪稳定性。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-amber-500"></i>
+                        <span>触发因素：缺乏自律、即时满足倾向</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片5 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-cyan-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-wrench text-cyan-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">过度调试</h3>
+                    </div>
+                    <p class="text-gray-700">在工具调试或细节优化上花费过多时间（如调试提示词、研究新工具），导致主要任务被搁置，工作流程被频繁打断。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-amber-500"></i>
+                        <span>触发因素：完美主义、回避核心任务</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片6 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-cyan-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-stopwatch-20 text-cyan-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">难坚持时间工具</h3>
+                    </div>
+                    <p class="text-gray-700">尝试各种时间管理工具和方法（如番茄工作法、时间块），但难以持续使用，导致系统频繁变更，效果不佳。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-amber-500"></i>
+                        <span>触发因素：缺乏持久性、系统不适合</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片7 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-cyan-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-calendar-day text-cyan-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">拖延重要不紧急</h3>
+                    </div>
+                    <p class="text-gray-700">习惯性拖延重要但不紧急的任务（如写播客稿、公众号文章、学习新技能），直到临近截止日期才仓促完成，质量受损。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-amber-500"></i>
+                        <span>触发因素：缺乏内在动力、压力驱动</span>
+                    </div>
+                </div>
+                
+                <!-- 行为卡片8 -->
+                <div class="behavior-card bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-cyan-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-business-time text-cyan-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">会议/约定迟到</h3>
+                    </div>
+                    <p class="text-gray-700">经常迟到或匆忙赶到会议和约会，给人不专业、不尊重的印象，影响人际关系和职业发展，增加自身压力和焦虑。</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <i class="fas fa-exclamation-triangle mr-1 text-amber-500"></i>
+                        <span>触发因素：准备不足、低估路程时间</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 负面影响 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-cyan-600 flex items-center">
+                <i class="fas fa-arrow-trend-down mr-3"></i>负面影响
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 影响卡片1 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-chart-line-down text-red-500 mr-3"></i>效率低下
+                    </h3>
+                    <p class="text-gray-700">时间管理混乱导致工作效率大幅降低，相同的任务需要花费更多时间，产出质量不稳定，难以实现个人和职业目标。</p>
+                </div>
+                
+                <!-- 影响卡片2 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-face-sad-tear text-red-500 mr-3"></i>压力与焦虑
+                    </h3>
+                    <p class="text-gray-700">长期的时间压力和计划失败导致慢性压力和焦虑，影响心理健康，降低生活满意度，甚至引发抑郁和倦怠感。</p>
+                </div>
+                
+                <!-- 影响卡片3 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-user-group-slash text-red-500 mr-3"></i>人际关系受损
+                    </h3>
+                    <p class="text-gray-700">频繁迟到、未能履行承诺或完成共同任务，损害他人信任和尊重，影响个人声誉和职业发展机会。</p>
+                </div>
+                
+                <!-- 影响卡片4 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-circle-xmark text-red-500 mr-3"></i>机会丧失
+                    </h3>
+                    <p class="text-gray-700">因时间管理不善错过重要机会和截止日期，无法参与有价值的项目或活动，长期限制个人和职业发展潜力。</p>
+                </div>
+                
+                <!-- 影响卡片5 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-battery-empty text-red-500 mr-3"></i>精力耗竭
+                    </h3>
+                    <p class="text-gray-700">混乱的时间管理导致频繁的"救火"模式，消耗过多精力在紧急但可能不重要的事务上，导致长期疲惫和倦怠。</p>
+                </div>
+                
+                <!-- 影响卡片6 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-circle-exclamation text-red-500 mr-3"></i>自我怀疑
+                    </h3>
+                    <p class="text-gray-700">反复的计划失败和时间管理问题导致对自己能力的怀疑，降低自信心和自我效能感，形成恶性循环。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 应对策略 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-green-600 flex items-center">
+                <i class="fas fa-shield-alt mr-3"></i>应对策略
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 策略卡片1 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-clock text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">时间审计</h3>
+                    </div>
+                    <p class="text-gray-700">连续7天记录每小时的活动，识别时间浪费点和效率高峰期，建立对实际时间使用的清晰认识，为合理规划提供基础。</p>
+                </div>
+                
+                <!-- 策略卡片2 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-list-check text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">任务分解</h3>
+                    </div>
+                    <p class="text-gray-700">将大型复杂任务分解为具体可执行的小步骤，每步不超过25-30分钟，降低启动阻力，提高完成感和进度可视化。</p>
+                </div>
+                
+                <!-- 策略卡片3 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-tomato text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">番茄工作法</h3>
+                    </div>
+                    <p class="text-gray-700">使用25分钟工作+5分钟休息的循环，每完成4个循环休息较长时间，提高专注度，减少拖延，建立工作节奏感。</p>
+                </div>
+                
+                <!-- 策略卡片4 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-calendar-week text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">时间块管理</h3>
+                    </div>
+                    <p class="text-gray-700">提前在日历中预留固定时间块用于重要任务，包括准备和缓冲时间，减少决策疲劳，建立工作节奏，提高计划可行性。</p>
+                </div>
+                
+                <!-- 策略卡片5 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-filter text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">优先级矩阵</h3>
+                    </div>
+                    <p class="text-gray-700">使用重要性/紧急性矩阵对任务分类，优先处理重要且紧急的任务，为重要但不紧急的任务预留时间，减少或委派不重要的任务。</p>
+                </div>
+                
+                <!-- 策略卡片6 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-moon text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">作息规律化</h3>
+                    </div>
+                    <p class="text-gray-700">建立固定的睡眠和起床时间，创建晨间和睡前例行程序，提高睡眠质量和精力水平，为高效工作奠定基础。</p>
+                </div>
+                
+                <!-- 策略卡片7 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-bell-slash text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">专注模式</h3>
+                    </div>
+                    <p class="text-gray-700">创建无干扰工作环境，关闭通知，使用专注模式应用，减少任务切换和外部打断，提高深度工作质量和效率。</p>
+                </div>
+                
+                <!-- 策略卡片8 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                        </div>
+                        <h class="text-xl font-semibold">时间估算训练</h3>
+                    </div>
+                    <p class="text-gray-700">记录任务预估时间和实际完成时间，分析差异原因，逐步提高时间估算准确性，为更合理的计划制定提供基础。</p>
+                </div>
+                
+                <!-- 策略卡片9 -->
+                <div class="strategy-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-calendar-check text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">准时系统</h3>
+                    </div>
+                    <p class="text-gray-700">为重要约会和会议设置多重提醒，预留充足准备和交通时间，养成提前15分钟到达的习惯，减少迟到和相关压力。</p>
+                </div>
+            </div>
+            
+            <!-- 添加行动计划链接 -->
+            <div class="text-center mt-8">
+                <a href="时间管理混乱行动计划.html" class="inline-flex items-center bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg transition shadow-md">
+                    <i class="fas fa-clipboard-list mr-2"></i> 查看21天行动计划
+                </a>
+                <p class="text-gray-600 mt-2">制定详细的21天行动计划，通过习惯追踪和目标设定，逐步建立有效的时间管理系统</p>
+            </div>
+        </div>
+        
+        <!-- 任务追踪器 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-6 text-cyan-600 flex items-center">
+                <i class="fas fa-tasks mr-3"></i>今日任务追踪
+            </h2>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-medium">完成时间审计记录</span>
+                        <span class="text-sm text-gray-500">0/1</span>
+                    </div>
+                    <div class="task-progress">
+                        <div class="task-progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-medium">使用番茄工作法</span>
+                        <span class="text-sm text-gray-500">0/4</span>
+                    </div>
+                    <div class="task-progress">
+                        <div class="task-progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-medium">为明日任务制定时间块</span>
+                        <span class="text-sm text-gray-500">0/1</span>
+                    </div>
+                    <div class="task-progress">
+                        <div class="task-progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-medium">按时完成今日计划任务</span>
+                        <span class="text-sm text-gray-500">0/3</span>
+                    </div>
+                    <div class="task-progress">
+                        <div class="task-progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 倒计时 -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-6 text-cyan-600 flex items-center">
+                <i class="fas fa-hourglass-half mr-3"></i>挑战倒计时
+            </h2>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                <p class="mb-4 text-gray-700">距离21天时间管理挑战结束还有</p>
+                
+                <div class="countdown-container">
+                    <div class="countdown-item">
+                        <div class="text-2xl font-bold" id="days">21</div>
+                        <div class="countdown-label">天</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="text-2xl font-bold" id="hours">00</div>
+                        <div class="countdown-label">时</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="text-2xl font-bold" id="minutes">00</div>
+                        <div class="countdown-label">分</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="text-2xl font-bold" id="seconds">00</div>
+                        <div class="countdown-label">秒</div>
+                    </div>
+                </div>
+                
+                <p class="mt-4 text-sm text-gray-600">坚持每日任务，建立有效的时间管理系统，提升工作效率和生活质量</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2023 反愿景计划 - 时间管理混乱</p>
+            <p class="text-gray-400 mt-2 text-sm">通过识别和改变不良行为模式，建立有效的时间管理系统，提升生活质量</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 阅读进度条
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        });
+        
+        // 倒计时功能
+        function updateCountdown() {
+            // 设置目标日期为当前日期加21天
+            const now = new Date();
+            const targetDate = new Date();
+            targetDate.setDate(now.getDate() + 21);
+            
+            // 计算剩余时间
+            const timeLeft = targetDate - now;
+            
+            // 计算天、时、分、秒
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            // 更新DOM
+            document.getElementById("days").innerText = days;
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+        }
+        
+        // 初始化倒计时并每秒更新
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        // 任务完成度更新功能
+        const taskBars = document.querySelectorAll('.task-progress-bar');
+        const taskCounts = document.querySelectorAll('.flex.justify-between.items-center span:last-child');
+        
+        // 模拟任务完成功能（实际应用中应连接到后端或本地存储）
+        function updateTaskProgress(taskIndex, completed, total) {
+            if (taskIndex >= taskBars.length) return;
+            
+            const percentage = (completed / total) * 100;
+            taskBars[taskIndex].style.width = percentage + '%';
+            taskCounts[taskIndex].textContent = completed + '/' + total;
+        }
+        
+        // 添加点击任务事件（示例）
+        document.querySelector('.bg-white.rounded-lg.shadow-md.p-6').addEventListener('click', function(e) {
+            // 找到最近的任务进度条
+            const taskItem = e.target.closest('.mb-4, div:not(.mb-4):last-child');
+            if (!taskItem) return;
+            
+            // 获取当前任务索引
+            const tasks = Array.from(this.children);
+            const taskIndex = tasks.indexOf(taskItem);
+            
+            // 获取当前完成情况
+            const countText = taskItem.querySelector('.text-sm.text-gray-500').textContent;
+            const [completed, total] = countText.split('/').map(num => parseInt(num));
+            
+            // 更新完成情况（这里简单地增加完成数，实际应用中可能需要更复杂的逻辑）
+            if (completed < total) {
+                updateTaskProgress(taskIndex, completed + 1, total);
+            }
+        });
+    </script>
+</body>
+</html>

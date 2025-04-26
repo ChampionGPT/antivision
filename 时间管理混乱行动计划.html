@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>21天时间管理混乱行动计划</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .gradient-overlay {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+        }
+        .task-progress {
+            background-color: #e2e8f0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .task-progress-bar {
+            background-color: #0891b2;
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .stage-button.active {
+            background-color: #0891b2;
+            color: white;
+        }
+        .task-label {
+            cursor: pointer;
+        }
+        input[type="checkbox"]:checked + .task-label {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- 头部横幅 -->
+    <div class="relative h-64 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1584936684506-c3a7a1ddd157?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80');">
+        <div class="absolute inset-0 gradient-overlay flex flex-col justify-center items-center text-white p-6 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">21天时间管理行动计划</h1>
+            <p class="text-lg md:text-xl max-w-3xl opacity-90">通过系统化的每日任务和习惯培养，逐步建立高效的时间管理系统</p>
+        </div>
+        <!-- 添加返回按钮 -->
+        <a href="index.html" class="absolute top-4 left-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-full flex items-center transition-all duration-300">
+            <i class="fas fa-arrow-left mr-2"></i>返回主页
+        </a>
+    </div>
+
+    <div class="container mx-auto px-4 pb-16">
+        <!-- 总体进度 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8 mt-8">
+            <h2 class="text-xl font-bold mb-4 text-cyan-600">总体进度</h2>
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-medium">完成任务数</span>
+                <span class="text-sm text-gray-500"><span id="overall-completed">0</span>/<span id="overall-total">63</span> (<span id="overall-percentage">0%</span>)</span>
+            </div>
+            <div class="task-progress">
+                <div id="overall-progress-bar" class="task-progress-bar" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- 阶段筛选 -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-6 text-cyan-600 flex items-center">
+                <i class="fas fa-layer-group mr-3"></i>按阶段筛选
+            </h2>
+            <div class="flex flex-wrap gap-2">
+                <button class="stage-button active px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors" data-stage="all">
+                    全部阶段
+                </button>
+                <button class="stage-button px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors" data-stage="basic">
+                    基础阶段 (1-7天)
+                </button>
+                <button class="stage-button px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors" data-stage="tools">
+                    工具阶段 (8-14天)
+                </button>
+                <button class="stage-button px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors" data-stage="habits">
+                    习惯阶段 (15-21天)
+                </button>
+            </div>
+        </div>
+
+        <!-- 21天计划 -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-cyan-600 flex items-center">
+                <i class="fas fa-calendar-alt mr-3"></i>21天行动计划
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 days-container">
+                <!-- 动态生成21天的内容 -->
+            </div>
+        </div>
+        
+        <!-- 资源与工具 -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-8 text-cyan-600 flex items-center">
+                <i class="fas fa-toolbox mr-3"></i>资源与工具
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4 text-cyan-600">推荐应用</h3>
+                    <ul class="space-y-3 text-gray-700" id="recommended-apps">
+                        <!-- 动态生成推荐应用 -->
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4 text-cyan-600">推荐书籍</h3>
+                    <ul class="space-y-3 text-gray-700" id="recommended-books">
+                        <!-- 动态生成推荐书籍 -->
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4 text-cyan-600">模板下载</h3>
+                    <ul class="space-y-3 text-gray-700" id="templates">
+                        <!-- 动态生成模板下载 -->
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4 text-cyan-600">常见问题</h3>
+                    <div class="space-y-4 text-gray-700" id="faq">
+                        <!-- 动态生成常见问题 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h2 class="text-xl font-bold">时间管理混乱行动计划</h2>
+                    <p class="text-gray-400 mt-1">21天建立高效时间管理系统</p>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-weixin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <hr class="my-6 border-gray-700">
+            
+            <div class="text-center text-gray-400 text-sm">
+                <p>&copy; 2023 时间管理混乱行动计划. 保留所有权利.</p>
+                <p class="mt-2">用21天建立你的个人时间管理系统，告别拖延与混乱</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 21天计划数据
+        const daysData = [
+            {
+                day: 1,
+                title: "时间审计与意识培养",
+                stage: "basic",
+                tasks: [
+                    { id: "day1-task1", title: "记录一天的时间使用", description: "详细记录一整天的时间使用情况，包括每项活动的开始和结束时间。" },
+                    { id: "day1-task2", title: "分析时间使用模式", description: "分析记录的数据，识别时间使用的模式、浪费点和效率高的时段。" },
+                    { id: "day1-task3", title: "设定时间意识目标", description: "基于分析结果，设定提高时间意识的具体目标，如减少特定的时间浪费行为。" }
+                ]
+            },
+            {
+                day: 2,
+                title: "价值观与优先级明确",
+                stage: "basic",
+                tasks: [
+                    { id: "day2-task1", title: "列出价值观", description: "列出3-5个对你重要的价值观，如家庭、健康、成长、贡献等。" },
+                    { id: "day2-task2", title: "评估当前时间分配", description: "评估当前的时间分配是否与价值观一致，找出不一致的地方。" },
+                    { id: "day2-task3", title: "制定价值观导向的时间分配计划", description: "制定一个更符合价值观的时间分配计划，确保重要的事情得到足够的时间投入。" }
+                ]
+            },
+            // 添加第3-21天的数据...
+            {
+                day: 3,
+                title: "目标设定与分解",
+                stage: "basic",
+                tasks: [
+                    { id: "day3-task1", title: "设定SMART目标", description: "为工作和个人生活设定3-5个符合SMART原则的目标（具体、可衡量、可实现、相关、有时限）。" },
+                    { id: "day3-task2", title: "将目标分解为可行动步骤", description: "将每个目标分解为具体的可行动步骤，确保每个步骤都清晰明确。" },
+                    { id: "day3-task3", title: "创建目标追踪系统", description: "创建一个简单的系统来追踪目标进展，可以是电子表格、应用程序或纸质笔记本。" }
+                ]
+            },
+            {
+                day: 4,
+                title: "任务分类与优先级",
+                stage: "basic",
+                tasks: [
+                    { id: "day4-task1", title: "收集所有任务", description: "收集所有需要完成的任务，无论大小，确保没有任何任务留在脑海中未记录。" },
+                    { id: "day4-task2", title: "使用四象限法分类", description: "使用紧急-重要四象限法对任务进行分类，明确每个任务的优先级。" },
+                    { id: "day4-task3", title: "制定今日任务清单", description: "基于优先级，制定今日任务清单，确保包含至少一个重要但不紧急的任务。" }
+                ]
+            },
+            {
+                day: 5,
+                title: "专注力训练",
+                stage: "basic",
+                tasks: [
+                    { id: "day5-task1", title: "识别分心触发因素", description: "记录一天中导致分心的主要因素，如通知、噪音、特定网站或应用等。" },
+                    { id: "day5-task2", title: "创建专注环境", description: "基于识别的分心因素，创建一个有利于专注的工作环境，消除或减少干扰。" },
+                    { id: "day5-task3", title: "尝试番茄工作法", description: "使用番茄工作法（25分钟专注工作，5分钟休息）完成至少4个番茄钟的工作。" }
+                ]
+            },
+            {
+                day: 6,
+                title: "拖延应对策略",
+                stage: "basic",
+                tasks: [
+                    { id: "day6-task1", title: "分析拖延模式", description: "分析自己的拖延模式，包括常见的拖延任务类型和拖延时的心理状态。" },
+                    { id: "day6-task2", title: "学习并应用2分钟法则", description: "学习2分钟法则（如果一个任务不到2分钟就能完成，立即去做），并在一天中应用。" },
+                    { id: "day6-task3", title: "为困难任务制定启动仪式", description: "为最容易拖延的任务类型制定一个简单的启动仪式，降低开始的心理阻力。" }
+                ]
+            },
+            {
+                day: 7,
+                title: "第一阶段总结与调整",
+                stage: "basic",
+                tasks: [
+                    { id: "day7-task1", title: "回顾前6天的实践", description: "回顾前6天的时间管理实践，记录有效的策略和遇到的挑战。" },
+                    { id: "day7-task2", title: "调整不适合的方法", description: "根据个人情况，调整不太适合自己的时间管理方法，保留和强化有效的部分。" },
+                    { id: "day7-task3", title: "制定下周实践计划", description: "基于第一周的经验，制定下周的时间管理实践计划，设定具体的改进目标。" }
+                ]
+            },
+            {
+                day: 8,
+                title: "时间块管理法",
+                stage: "tools",
+                tasks: [
+                    { id: "day8-task1", title: "学习时间块管理原理", description: "了解时间块管理法的基本原理和好处，包括如何合理安排不同类型的活动。" },
+                    { id: "day8-task2", title: "创建时间块模板", description: "创建一个适合自己的时间块模板，包括深度工作、浅度工作、会议和休息等不同类型的块。" },
+                    { id: "day8-task3", title: "使用时间块安排明天", description: "使用时间块方法规划明天的日程，确保重要任务被分配到高能量时段。" }
+                ]
+            },
+            {
+                day: 9,
+                title: "数字工具整合",
+                stage: "tools",
+                tasks: [
+                    { id: "day9-task1", title: "评估当前数字工具", description: "评估当前使用的时间管理和生产力数字工具，识别重叠、缺口和改进空间。" },
+                    { id: "day9-task2", title: "选择核心工具组合", description: "选择一组核心数字工具，确保覆盖任务管理、日程安排、笔记和时间追踪等关键功能。" },
+                    { id: "day9-task3", title: "设置和整合选定工具", description: "设置选定的工具，确保它们之间的整合，并创建使用这些工具的基本工作流程。" }
+                ]
+            },
+            {
+                day: 10,
+                title: "批处理与主题日",
+                stage: "tools",
+                tasks: [
+                    { id: "day10-task1", title: "识别可批处理的任务", description: "识别工作和生活中可以批量处理的类似任务，如邮件处理、电话沟通、内容创作等。" },
+                    { id: "day10-task2", title: "设计主题日计划", description: "设计一个主题日计划，将一周中的不同日子分配给不同类型的工作，提高同类任务处理效率。" },
+                    { id: "day10-task3", title: "实施批处理技术", description: "选择一类任务，应用批处理技术集中处理，记录效率提升情况。" }
+                ]
+            },
+            {
+                day: 11,
+                title: "每日回顾与计划",
+                stage: "tools",
+                tasks: [
+                    { id: "day11-task1", title: "设计每日回顾流程", description: "设计一个简洁的每日回顾流程，包括完成情况检查、经验总结和调整点识别。" },
+                    { id: "day11-task2", title: "建立明日计划流程", description: "设计一个明日计划流程，包括任务选择、优先级设定和时间块分配，为第二天做好准备。" },
+                    { id: "day11-task3", title: "执行今日回顾与明日计划", description: "按照设计的流程执行今日回顾和明日计划，调整流程以适应个人需求。" }
+                ]
+            },
+            {
+                day: 12,
+                title: "周计划与回顾",
+                stage: "tools",
+                tasks: [
+                    { id: "day12-task1", title: "设计周计划模板", description: "设计一个周计划模板，包括周目标设定、关键任务分配和时间块预留等内容。" },
+                    { id: "day12-task2", title: "设计周回顾模板", description: "设计一个周回顾模板，包括目标完成情况、时间使用分析和下周改进点等内容。" },
+                    { id: "day12-task3", title: "制定下周计划", description: "使用设计的周计划模板，为下周制定详细计划，包括主要目标和时间分配。" }
+                ]
+            },
+            {
+                day: 13,
+                title: "时间估算训练",
+                stage: "tools",
+                tasks: [
+                    { id: "day13-task1", title: "创建时间估算记录表", description: "创建一个表格，用于记录任务预估时间和实际完成时间，以及差异分析。" },
+                    { id: "day13-task2", title: "为今日任务进行时间估算", description: "为今天计划的所有任务进行时间估算，记录在表格中，并在完成后填写实际用时。" },
+                    { id: "day13-task3", title: "分析估算误差原因", description: "分析时间估算与实际用时的差异，找出导致误差的主要原因（如过度乐观、忽略中断等）。" }
+                ]
+            },
+            {
+                day: 14,
+                title: "第二阶段总结与调整",
+                stage: "tools",
+                tasks: [
+                    { id: "day14-task1", title: "评估各种工具和方法的效果", description: "评估过去7天尝试的各种时间管理工具和方法的效果，确定哪些最适合自己。" },
+                    { id: "day14-task2", title: "制定个人时间管理系统初步方案", description: "基于前两周的经验，制定个人化的时间管理系统初步方案，整合最有效的工具和方法。" },
+                    { id: "day14-task3", title: "准备第三阶段实施计划", description: "为第三阶段的习惯化和系统整合制定详细的实施计划，确保顺利过渡。" }
+                ]
+            },
+            {
+                day: 15,
+                title: "个人时间管理系统搭建",
+                stage: "habits",
+                tasks: [
+                    { id: "day15-task1", title: "整合选定的工具和方法", description: "将前两周中最有效的工具和方法整合到一个统一的个人时间管理系统中。" },
+                    { id: "day15-task2", title: "创建系统使用指南", description: "为自己创建一个简明的系统使用指南，包括日常流程、周期性任务和各种情况的应对方法。" },
+                    { id: "day15-task3", title: "按新系统执行一天", description: "按照新建立的时间管理系统执行一整天的工作和生活安排，记录使用体验。" }
+                ]
+            },
+            {
+                day: 16,
+                title: "系统调整与优化",
+                stage: "habits",
+                tasks: [
+                    { id: "day16-task1", title: "分析系统使用体验", description: "分析昨天使用新系统的体验，识别流畅和卡顿的环节，找出需要改进的地方。" },
+                    { id: "day16-task2", title: "优化系统流程", description: "根据分析结果，优化系统流程，简化复杂环节，增强实用性和可持续性。" },
+                    { id: "day16-task3", title: "使用优化后的系统", description: "使用优化后的时间管理系统执行一天的工作和生活安排，继续记录使用体验。" }
+                ]
+            },
+            {
+                day: 17,
+                title: "应对突发情况策略",
+                stage: "habits",
+                tasks: [
+                    { id: "day17-task1", title: "列出常见突发情况", description: "列出工作和生活中常见的突发情况（如紧急任务、计划变更、健康问题等）。" },
+                    { id: "day17-task2", title: "制定应对策略", description: "为每种突发情况制定具体的应对策略，包括如何调整计划、重新安排任务和恢复正常工作流程。" },
+                    { id: "day17-task3", title: "将应对策略整合到系统中", description: "将应对突发情况的策略整合到个人时间管理系统中，确保系统具有足够的灵活性和适应性。" }
+                ]
+            },
+            {
+                day: 18,
+                title: "能量管理整合",
+                stage: "habits",
+                tasks: [
+                    { id: "day18-task1", title: "创建个人能量曲线图", description: "根据过去的观察和记录，创建一个个人能量曲线图，显示一天中不同时段的精力和专注度水平。" },
+                    { id: "day18-task2", title: "调整任务分配策略", description: "根据能量曲线图，调整任务分配策略，将高认知负荷任务安排在能量高峰期，将低认知任务安排在能量低谷期。" },
+                    { id: "day18-task3", title: "制定能量恢复策略", description: "制定能量恢复策略，包括短休息、午休、体育活动和饮食调整等，确保全天保持较高的能量水平。" }
+                ]
+            },
+            {
+                day: 19,
+                title: "习惯触发器设计",
+                stage: "habits",
+                tasks: [
+                    { id: "day19-task1", title: "识别关键时间管理习惯", description: "识别3-5个最关键的时间管理习惯，这些习惯对提高效率和减少拖延最为重要。" },
+                    { id: "day19-task2", title: "为每个习惯设计触发器", description: "为每个关键习惯设计明确的触发器（如特定时间、完成特定活动后、特定环境等），帮助习惯自动化。" },
+                    { id: "day19-task3", title: "实施习惯触发系统", description: "在日常生活中实施设计的习惯触发系统，记录触发器的有效性和习惯执行情况。" }
+                ]
+            },
+            {
+                day: 20,
+                title: "长期可持续性策略",
+                stage: "habits",
+                tasks: [
+                    { id: "day20-task1", title: "设计进度跟踪系统", description: "设计一个简单的进度跟踪系统，用于长期监控时间管理习惯的坚持情况和效果。" },
+                    { id: "day20-task2", title: "制定奖励机制", description: "为坚持时间管理系统设计个人化的奖励机制，包括短期奖励和长期奖励，增强持续动力。" },
+                    { id: "day20-task3", title: "制定应对倦怠策略", description: "制定应对时间管理倦怠的策略，包括简化系统、调整期望和临时放松标准等，确保长期可持续性。" }
+                ]
+            },
+            {
+                day: 21,
+                title: "总结与未来规划",
+                stage: "habits",
+                tasks: [
+                    { id: "day21-task1", title: "全面回顾21天历程", description: "回顾整个21天的时间管理混乱行动计划，总结主要收获、突破点和仍需改进的地方。" },
+                    { id: "day21-task2", title: "制定未来30/60/90天计划", description: "制定未来30/60/90天的时间管理发展计划，包括需要强化的习惯、需要尝试的新方法和长期目标。" },
+                    { id: "day21-task3", title: "庆祝完成21天挑战", description: "以适当的方式庆祝完成21天时间管理混乱行动计划，肯定自己的努力和进步，为长期坚持奠定积极基础。" }
+                ]
+            }
+        ];
+
+        // 资源数据
+        const resourcesData = {
+            apps: [
+                { name: "Forest", description: "专注时间管理应用，通过种树的方式鼓励专注" },
+                { name: "Todoist", description: "功能强大的任务管理工具，支持项目分类和优先级设置" },
+                { name: "Notion", description: "全能工作区，可用于任务管理、笔记和知识库建设" },
+                { name: "Google Calendar", description: "日历应用，适合时间块管理和日程安排" },
+                { name: "RescueTime", description: "时间追踪工具，自动记录电脑和手机使用情况" }
+            ],
+            books: [
+                { name: "《深度工作》", author: "Cal Newport", description: "关于如何在分心世界中培养专注能力" },
+                { name: "《番茄工作法图解》", author: "Staffan Nöteberg", description: "详细介绍番茄工作法的实施方法" },
+                { name: "《搞定》", author: "David Allen", description: "经典的GTD时间管理方法" },
+                { name: "《原子习惯》", author: "James Clear", description: "关于如何建立和保持良好习惯的实用指南" },
+                { name: "《精力管理》", author: "Jim Loehr和Tony Schwartz", description: "关于如何管理精力而非时间，以提高工作效率和生活质量" }
+            ],
+            templates: [
+                { name: "每日计划模板", description: "包含时间块、任务优先级和能量水平跟踪的每日计划模板", link: "#" },
+                { name: "周计划与回顾模板", description: "用于设定周目标、分配任务和进行周回顾的综合模板", link: "#" },
+                { name: "时间审计表格", description: "详细记录和分析时间使用情况的表格模板", link: "#" },
+                { name: "习惯追踪表", description: "用于追踪每日习惯养成情况的表格模板", link: "#" }
+            ],
+            faq: [
+                { 
+                    question: "如何处理计划被突发事件打断的情况？", 
+                    answer: "保持灵活性是关键。在计划中预留缓冲时间，学会区分真正的紧急事件和可以推迟的事项，并在每天结束时重新评估和调整计划。第17天的内容专门讨论了应对突发情况的策略。" 
+                },
+                { 
+                    question: "如何避免在时间管理上走入完美主义陷阱？", 
+                    answer: "记住时间管理是工具而非目标。设定合理期望，接受有时计划会被打乱，关注进步而非完美。定期评估系统是否真正提高了效率和减轻了压力，而不是增加了负担。" 
+                },
+                { 
+                    question: "如何在多任务环境中保持专注？", 
+                    answer: "尽量避免多任务处理，而是采用时间块方法，为不同类型的工作分配专门时间。使用番茄工作法等技术创造专注环境，并学会设置边界，如关闭通知和沟通期望管理。" 
+                },
+                { 
+                    question: "这个21天计划结束后如何保持时间管理习惯？", 
+                    answer: "第20-21天专门讨论了长期可持续性策略。关键是将有效的方法融入日常生活，建立明确的习惯触发器，设计进度跟踪系统，并为坚持良好习惯设置奖励机制。" 
+                }
+            ]
+        };
+
+        // 生成天卡片
+        function generateDayCards() {
+            const daysContainer = document.querySelector('.days-container');
+            
+            daysData.forEach(day => {
+                const dayCard = document.createElement('div');
+                dayCard.className = 'day-card bg-white rounded-lg shadow-md p-6';
+                dayCard.setAttribute('data-day', day.day);
+                
+                let stageLabel = '';
+                let stageColor = '';
+                
+                if (day.stage === 'basic') {
+                    stageLabel = '基础阶段';
+                    stageColor = 'bg-blue-100 text-blue-800';
+                } else if (day.stage === 'tools') {
+                    stageLabel = '工具阶段';
+                    stageColor = 'bg-purple-100 text-purple-800';
+                } else {
+                    stageLabel = '习惯阶段';
+                    stageColor = 'bg-amber-100 text-amber-800';
+                }
+                
+                dayCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold">第${day.day}天：${day.title}</h3>
+                        <span class="text-sm ${stageColor} py-1 px-3 rounded-full">${stageLabel}</span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-medium">完成进度</span>
+                            <span class="text-sm text-gray-500 day-progress">0/3</span>
+                        </div>
+                        <div class="task-progress">
+                            <div class="task-progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        ${day.tasks.map(task => `
+                            <div class="flex items-start">
+                                <input type="checkbox" class="task-checkbox mt-1" id="${task.id}">
+                                <label for="${task.id}" class="task-label ml-3 text-gray-700">
+                                    <span class="font-medium block">${task.title}</span>
+                                    <span class="text-sm text-gray-500">${task.description}</span>
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                daysContainer.appendChild(dayCard);
+            });
+        }
+        
+        // 生成资源列表
+        function generateResources() {
+            // 生成推荐应用
+            const appsContainer = document.getElementById('recommended-apps');
+            resourcesData.apps.forEach(app => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="font-medium">${app.name}</div>
+                    <div class="text-sm text-gray-600">${app.description}</div>
+                `;
+                appsContainer.appendChild(li);
+            });
+            
+            // 生成推荐书籍
+            const booksContainer = document.getElementById('recommended-books');
+            resourcesData.books.forEach(book => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="font-medium">${book.name}</div>
+                    <div class="text-sm text-gray-600">作者：${book.author}</div>
+                    <div class="text-sm text-gray-600">${book.description}</div>
+                `;
+                booksContainer.appendChild(li);
+            });
+            
+            // 生成模板下载
+            const templatesContainer = document.getElementById('templates');
+            resourcesData.templates.forEach(template => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="font-medium">
+                        <a href="${template.link}" class="text-cyan-600 hover:underline flex items-center">
+                            <i class="fas fa-download mr-2"></i>${template.name}
+                        </a>
+                    </div>
+                    <div class="text-sm text-gray-600">${template.description}</div>
+                `;
+                templatesContainer.appendChild(li);
+            });
+            
+            // 生成常见问题
+            const faqContainer = document.getElementById('faq');
+            resourcesData.faq.forEach(item => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <h4 class="font-medium mb-1">${item.question}</h4>
+                    <p class="text-sm text-gray-600">${item.answer}</p>
+                `;
+                faqContainer.appendChild(div);
+            });
+        }
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 生成内容
+            generateDayCards();
+            generateResources();
+            
+            // 任务复选框功能
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const dayCard = this.closest('.day-card');
+                    const dayProgress = dayCard.querySelector('.day-progress');
+                    const progressBar = dayCard.querySelector('.task-progress-bar');
+                    const allTasks = dayCard.querySelectorAll('.task-checkbox');
+                    const completedTasks = dayCard.querySelectorAll('.task-checkbox:checked');
+                    
+                    // 更新进度文本
+                    dayProgress.textContent = `${completedTasks.length}/${allTasks.length}`;
+                    
+                    // 更新进度条
+                    const progressPercentage = (completedTasks.length / allTasks.length) * 100;
+                    progressBar.style.width = `${progressPercentage}%`;
+                    
+                    // 保存到本地存储
+                    saveProgress();
+                    
+                    // 更新总体进度
+                    updateOverallProgress();
+                });
+            });
+            
+            // 保存进度到本地存储
+            function saveProgress() {
+                const progress = {};
+                
+                checkboxes.forEach(checkbox => {
+                    progress[checkbox.id] = checkbox.checked;
+                });
+                
+                localStorage.setItem('timeManagementProgress', JSON.stringify(progress));
+            }
+            
+            // 从本地存储加载进度
+            function loadProgress() {
+                const savedProgress = localStorage.getItem('timeManagementProgress');
+                
+                if (savedProgress) {
+                    const progress = JSON.parse(savedProgress);
+                    
+                    for (const id in progress) {
+                        const checkbox = document.getElementById(id);
+                        if (checkbox) {
+                            checkbox.checked = progress[id];
+                        }
+                    }
+                    
+                    // 更新所有天卡片的进度显示
+                    document.querySelectorAll('.day-card').forEach(dayCard => {
+                        const dayProgress = dayCard.querySelector('.day-progress');
+                        const progressBar = dayCard.querySelector('.task-progress-bar');
+                        const allTasks = dayCard.querySelectorAll('.task-checkbox');
+                        const completedTasks = dayCard.querySelectorAll('.task-checkbox:checked');
+                        
+                        dayProgress.textContent = `${completedTasks.length}/${allTasks.length}`;
+                        const progressPercentage = (completedTasks.length / allTasks.length) * 100;
+                        progressBar.style.width = `${progressPercentage}%`;
+                    });
+                    
+                    // 更新总体进度
+                    updateOverallProgress();
+                }
+            }
+            
+            // 阶段切换功能
+            const stageButtons = document.querySelectorAll('.stage-button');
+            const dayCards = document.querySelectorAll('.day-card');
+            
+            stageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const stage = this.getAttribute('data-stage');
+                    
+                    // 移除所有按钮的活动状态
+                    stageButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // 添加当前按钮的活动状态
+                    this.classList.add('active');
+                    
+                    // 显示或隐藏天卡片
+                    dayCards.forEach(card => {
+                        if (stage === 'all') {
+                            card.style.display = 'block';
+                        } else {
+                            const cardStage = card.querySelector('.rounded-full').textContent.includes('基础') ? 'basic' :
+                                             card.querySelector('.rounded-full').textContent.includes('工具') ? 'tools' : 'habits';
+                            
+                            card.style.display = (cardStage === stage) ? 'block' : 'none';
+                        }
+                    });
+                });
+            });
+            
+            // 进度总结功能
+            function updateOverallProgress() {
+                const totalTasks = document.querySelectorAll('.task-checkbox').length;
+                const completedTasks = document.querySelectorAll('.task-checkbox:checked').length;
+                const progressPercentage = (completedTasks / totalTasks) * 100;
+                
+                document.getElementById('overall-completed').textContent = completedTasks;
+                document.getElementById('overall-total').textContent = totalTasks;
+                document.getElementById('overall-percentage').textContent = `${Math.round(progressPercentage)}%`;
+                document.getElementById('overall-progress-bar').style.width = `${progressPercentage}%`;
+            }
+            
+            // 加载保存的进度
+            loadProgress();
+        });
+    </script>
+</body>
+</html>

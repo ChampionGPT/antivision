@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>九宫格反愿景规划图</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --red-color: #dc2626;
+            --orange-color: #ea580c;
+            --yellow-color: #ca8a04;
+            --cyan-color: #0891b2;
+            --green-color: #16a34a;
+            --purple-color: #9333ea;
+            --blue-color: #2563eb;
+            --pink-color: #db2777;
+            --gray-color: #4b5563;
+        
+            /* 低饱和度背景色 */
+            --red-bg: #fee2e2;
+            --orange-bg: #ffedd5;
+            --yellow-bg: #fef9c3;
+            --cyan-bg: #cffafe;
+            --green-bg: #dcfce7;
+            --purple-bg: #f3e8ff;
+            --blue-bg: #dbeafe;
+            --pink-bg: #fce7f3;
+            --gray-bg: #f3f4f6;
+        
+            /* 悬停时的背景色（稍微提高饱和度） */
+            --red-hover: #fecaca;
+            --orange-hover: #fed7aa;
+            --yellow-hover: #fef08a;
+            --cyan-hover: #a5f3fc;
+            --green-hover: #bbf7d0;
+            --purple-hover: #e9d5ff;
+            --blue-hover: #bfdbfe;
+            --pink-hover: #fbcfe8;
+            --gray-hover: #e5e7eb;
+        
+            /* 动画时间 */
+            --transition-time: 0.3s;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1e293b;
+            text-align: center;
+        }
+        
+        .outer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 1000px;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .outer-cell {
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+            transition: all var(--transition-time) ease;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .outer-cell:hover, .outer-cell:focus {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.15), 0 8px 10px -5px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        /* 中心单元格链接样式 */
+        .nested-cell-center {
+            font-weight: 600;
+            border-width: 2px;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            transition: all var(--transition-time) ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .nested-cell-center:hover, .nested-cell-center:focus {
+            background-color: rgba(255, 255, 255, 0.9);
+            transform: scale(1.05);
+        }
+        
+        .nested-cell-center i {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+            transition: transform var(--transition-time) ease;
+        }
+        
+        .nested-cell-center:hover i, .nested-cell-center:focus i {
+            transform: rotate(15deg);
+        }
+        
+        .nested-cell-behavior {
+            background-color: rgba(255, 255, 255, 0.5);
+            transition: all var(--transition-time) ease;
+        }
+        
+        .nested-cell-behavior:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            z-index: 5;
+        }
+        
+        /* 更新颜色方案，使用变量 */
+        .outer-cell-1 { background-color: var(--red-bg); }
+        .outer-cell-2 { background-color: var(--orange-bg); }
+        .outer-cell-3 { background-color: var(--yellow-bg); }
+        .outer-cell-4 { background-color: var(--cyan-bg); }
+        .outer-cell-5 { background-color: var(--green-bg); border-color: #22c55e; border-width: 2px; }
+        .outer-cell-6 { background-color: var(--purple-bg); }
+        .outer-cell-7 { background-color: var(--blue-bg); }
+        .outer-cell-8 { background-color: var(--pink-bg); }
+        .outer-cell-9 { background-color: var(--gray-bg); }
+        
+        /* 悬停效果 */
+        .outer-cell-1:hover, .outer-cell-1:focus { background-color: var(--red-hover); }
+        .outer-cell-2:hover, .outer-cell-2:focus { background-color: var(--orange-hover); }
+        .outer-cell-3:hover, .outer-cell-3:focus { background-color: var(--yellow-hover); }
+        .outer-cell-4:hover, .outer-cell-4:focus { background-color: var(--cyan-hover); }
+        .outer-cell-5:hover, .outer-cell-5:focus { background-color: var(--green-hover); }
+        .outer-cell-6:hover, .outer-cell-6:focus { background-color: var(--purple-hover); }
+        .outer-cell-7:hover, .outer-cell-7:focus { background-color: var(--blue-hover); }
+        .outer-cell-8:hover, .outer-cell-8:focus { background-color: var(--pink-hover); }
+        .outer-cell-9:hover, .outer-cell-9:focus { background-color: var(--gray-hover); }
+        
+        /* 添加导航栏样式 */
+        .navbar {
+            width: 100%;
+            background-color: #1e293b;
+            color: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+        }
+        
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar-logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-logo i {
+            margin-right: 0.5rem;
+            color: #10b981;
+        }
+        
+        .navbar-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .navbar-link {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.2s;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+        
+        .navbar-link:hover {
+            color: white;
+        }
+        
+        .navbar-link.active {
+            color: white;
+            font-weight: 500;
+            border-bottom: 2px solid #10b981;
+        }
+        
+        /* 移动端菜单按钮 */
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* 添加面包屑导航 */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        .breadcrumb a {
+            color: #0891b2;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .breadcrumb a:hover {
+            color: #0e7490;
+            text-decoration: underline;
+        }
+        
+        .breadcrumb-separator {
+            margin: 0 0.5rem;
+            color: #94a3b8;
+        }
+        
+        /* 添加提示工具提示 */
+        .tooltip {
+            position: relative;
+        }
+        
+        .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #1e293b;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: #1e293b;
+                flex-direction: column;
+                padding: 1rem;
+                border-radius: 0 0 0.5rem 0.5rem;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+            
+            .navbar-links.active {
+                display: flex;
+            }
+            
+            .menu-button {
+                display: block;
+            }
+            
+            /* ... 其他响应式样式保持不变 ... */
+        }
+        
+        /* 添加打印友好样式 */
+        @media print {
+            .navbar, .hero-bg, .legend {
+                display: none;
+            }
+            
+            body {
+                padding: 0;
+                background-color: white;
+            }
+            
+            .outer-grid {
+                box-shadow: none;
+                border: none;
+            }
+            
+            .outer-cell:hover {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+        
+        /* 添加嵌套网格样式 */
+        .nested-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            width: 100%;
+            height: 100%;
+            gap: 1px;
+        }
+        
+        .nested-cell {
+            padding: 0.25rem;
+            font-size: 0.65rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all var(--transition-time) ease;
+        }
+        
+        .nested-cell i {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .nested-cell-title {
+            font-weight: 600;
+            font-size: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* 添加英雄区域样式 */
+        .hero-bg {
+            width: 100%;
+            max-width: 1000px;
+            background-color: #1e293b;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            background-image: linear-gradient(rgba(30, 41, 59, 0.9), rgba(30, 41, 59, 0.9)), 
+                              url('https://source.unsplash.com/1600x900/?mindfulness,growth');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 添加页脚样式 */
+        .footer {
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 1000px;
+            background-color: #1e293b;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        /* 添加动画效果 */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        /* 添加图例样式 */
+        .legend {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #1e293b;
+        }
+        
+        .legend-color {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 0.25rem;
+            margin-right: 0.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 定义图例颜色变量 */
+        :root {
+            --red-bg: #fee2e2;
+            --orange-bg: #ffedd5;
+            --yellow-bg: #fef9c3;
+            --cyan-bg: #cffafe;
+            --green-bg: #dcfce7;
+            --purple-bg: #f3e8ff;
+            --blue-bg: #dbeafe;
+            --pink-bg: #fce7f3;
+            --gray-bg: #f1f5f9;
+        }
+        
+        @media (max-width: 768px) {
+            .legend {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .legend-item {
+                margin-bottom: 0.25rem;
+            }
+        }
+</style>
+</head>
+<body>
+    <!-- 添加导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <i class="fas fa-bullseye"></i>
+                <span>反愿景规划</span>
+            </div>
+            <div class="navbar-links">
+                <a href="index.html" class="navbar-link">首页</a>
+                <a href="反愿景九宫格.html" class="navbar-link active">九宫格总览</a>
+                <a href="index.html#concept" class="navbar-link">概念介绍</a>
+                <a href="index.html#guide" class="navbar-link">使用指南</a>
+            </div>
+            <button class="menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- 添加面包屑导航 -->
+    <div class="breadcrumb">
+        <a href="index.html">首页</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>九宫格总览</span>
+    </div>
+
+    <!-- Hero Section with Background Image -->
+    <div class="hero-bg">
+        <div class="hero-content">
+            <h1 class="text-3xl font-bold mb-2">嵌套九宫格反愿景规划图</h1>
+            <p class="text-lg opacity-90">通过识别自身不良行为模式，规划理想自我的发展路径</p>
+            <p class="mt-2 text-sm opacity-80">点击各区域中心格查看详细内容</p>
+        </div>
+    </div>
+
+    <!-- Main Grid Container -->
+    <div class="outer-grid">
+        <!-- Cell 1: 冲动主导 & 浅尝辄止 -->
+        <div class="outer-cell outer-cell-1 tooltip">
+            <div class="nested-grid">
+                <div class="nested-cell nested-cell-behavior text-red-700"><i class="fas fa-shopping-cart"></i><span><strong>冲动购物</strong> (压力/无聊时)</span></div>
+                <div class="nested-cell nested-cell-behavior text-red-700"><i class="fas fa-mobile-alt"></i><span><strong>深夜刷手机</strong> (晚睡)</span></div>
+                <div class="nested-cell nested-cell-behavior text-red-700"><i class="fas fa-brain"></i><span><strong>Hyperfocus</strong> (忽略计划)</span></div>
+                <div class="nested-cell nested-cell-behavior text-red-700"><i class="fas fa-wind"></i><span><strong>分心</strong> (任务等待时)</span></div>
+                <!-- Center Cell: Title with Link -->
+                <a href="冲动主导与浅尝辄止.html" class="nested-cell nested-cell-center">
+                     <i class="fas fa-bolt"></i><span>冲动主导 &<br>浅尝辄止</span>
+                </a>
+                <div class="nested-cell nested-cell-behavior text-red-700"><i class="far fa-clock"></i><span>缺<strong>耐心</strong> (打断他人)</span></div>
+                <div class="nested-cell nested-cell-behavior text-red-700"><i class="fas fa-flag"></i><span><strong>浅尝辄止</strong> (易放弃)</span></div>
+                <div class="nested-cell nested-cell-behavior text-red-700"><i class="fas fa-lightbulb"></i><span>易被<strong>新奇</strong>吸引</span></div>
+                <div class="nested-cell nested-cell-behavior text-red-700"><i class="fas fa-exclamation"></i><span>不顾<strong>后果</strong>行动</span></div>
+            </div>
+            <span class="tooltip-text">点击中心查看如何控制冲动，培养专注与坚持</span>
+        </div>
+
+        <!-- Cell 2: 重复错误 & 缺乏远见 -->
+        <div class="outer-cell outer-cell-2 tooltip">
+            <div class="nested-grid">
+                <div class="nested-cell nested-cell-behavior text-orange-700"><i class="fas fa-smoking"></i><span><strong>戒烟失败</strong> (反复)</span></div>
+                <div class="nested-cell nested-cell-behavior text-orange-700"><i class="fas fa-repeat"></i><span><strong>明知故犯</strong> (熬夜/喝酒)</span></div>
+                <div class="nested-cell nested-cell-behavior text-orange-700"><i class="fas fa-map-signs"></i><span>无<strong>目标</strong>体系</span></div>
+                <div class="nested-cell nested-cell-behavior text-orange-700"><i class="fas fa-book"></i><span>不<strong>记录/回顾</strong> (迭代混乱)</span></div>
+                <!-- Center Cell: Title with Link -->
+                <a href="重复错误与缺乏远见.html" class="nested-cell nested-cell-center">
+                    <i class="fas fa-redo-alt"></i><span>重复错误 &<br>缺乏远见</span>
+                </a>
+                <div class="nested-cell nested-cell-behavior text-orange-700"><i class="fas fa-question-circle"></i><span>不<strong>总结</strong>成败</span></div>
+                <div class="nested-cell nested-cell-behavior text-orange-700"><i class="fas fa-glasses"></i><span>忽视<strong>长远</strong>价值</span></div>
+                <div class="nested-cell nested-cell-behavior text-orange-700"><i class="fas fa-person-digging"></i><span>回避<strong>困难/不适</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-orange-700"><i class="fas fa-recycle"></i><span>固守<strong>旧方法</strong></span></div>
+            </div>
+            <span class="tooltip-text">点击中心查看如何打破恶性循环，建立长远视角</span>
+        </div>
+
+        <!-- Cell 3: 内在无序 & 行动盲目 -->
+        <div class="outer-cell outer-cell-3 tooltip">
+            <div class="nested-grid">
+                <div class="nested-cell nested-cell-behavior text-yellow-700"><i class="fas fa-power-off"></i><span><strong>启动困难</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-yellow-700"><i class="fas fa-boxes-stacked"></i><span><strong>环境混乱</strong> (内耗)</span></div>
+                <div class="nested-cell nested-cell-behavior text-yellow-700"><i class="fas fa-list-ul"></i><span><strong>流程不清</strong> (效率低)</span></div>
+                <div class="nested-cell nested-cell-behavior text-yellow-700"><i class="fas fa-comment-slash"></i><span><strong>表达困难</strong> (冲突)</span></div>
+                <!-- Center Cell: Title with Link -->
+                <a href="内在无序与行动盲目.html" class="nested-cell nested-cell-center">
+                    <i class="fas fa-random"></i><span>内在无序 &<br>行动盲目</span>
+                </a>
+                <div class="nested-cell nested-cell-behavior text-yellow-700"><i class="fas fa-head-side-cough"></i><span><strong>思路不清</strong> (逻辑差)</span></div>
+                <div class="nested-cell nested-cell-behavior text-yellow-700"><i class="fas fa-hand-sparkles"></i><span>易被<strong>新工具</strong>打乱</span></div>
+                <div class="nested-cell nested-cell-behavior text-yellow-700"><i class="fas fa-brain"></i><span><strong>想法混乱</strong>难聚焦</span></div>
+                <div class="nested-cell nested-cell-behavior text-yellow-700"><i class="fas fa-broom"></i><span>物品<strong>杂乱</strong>无章</span></div>
+            </div>
+            <span class="tooltip-text">点击中心查看如何建立内在秩序，明确行动方向</span>
+        </div>
+
+        <!-- Cell 4: 时间管理混乱 -->
+        <div class="outer-cell outer-cell-4 tooltip">
+            <div class="nested-grid">
+                <div class="nested-cell nested-cell-behavior text-cyan-700"><i class="fas fa-list-check"></i><span>缺<strong>计划/优先级</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-cyan-700"><i class="fas fa-person-running"></i><span><strong>高估效率</strong> (计划失败)</span></div>
+                <div class="nested-cell nested-cell-behavior text-cyan-700"><i class="fas fa-question"></i><span>难<strong>预估耗时</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-cyan-700"><i class="fas fa-moon"></i><span><strong>晚睡晚起</strong> (作息乱)</span></div>
+                <!-- Center Cell: Title with Link -->
+                <a href="时间管理混乱.html" class="nested-cell nested-cell-center">
+                    <i class="fas fa-clock"></i><span>时间管理<br>混乱</span>
+                </a>
+                <div class="nested-cell nested-cell-behavior text-cyan-700"><i class="fas fa-wrench"></i><span>被<strong>过度调试</strong>打断</span></div>
+                <div class="nested-cell nested-cell-behavior text-cyan-700"><i class="fas fa-stopwatch"></i><span>难坚持<strong>时间工具</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-cyan-700"><i class="fas fa-calendar-day"></i><span><strong>拖延</strong>重要不紧急</span></div>
+                <div class="nested-cell nested-cell-behavior text-cyan-700"><i class="fas fa-business-time"></i><span>会议/约定<strong>迟到</strong></span></div>
+            </div>
+            <span class="tooltip-text">点击中心查看如何掌控时间，提高效率与规律</span>
+        </div>
+
+        <!-- Cell 5: CENTER - Ideal Self & Problem Titles -->
+        <div class="outer-cell outer-cell-5 tooltip">
+            <div class="nested-grid">
+                <!-- Surrounding Cells: Titles of Problem Areas -->
+                <div class="nested-cell nested-cell-title text-red-600"><span>冲动主导<br>& 浅尝辄止</span></div>
+                <div class="nested-cell nested-cell-title text-orange-600"><span>重复错误<br>& 缺乏远见</span></div>
+                <div class="nested-cell nested-cell-title text-yellow-600"><span>内在无序<br>& 行动盲目</span></div>
+                <div class="nested-cell nested-cell-title text-cyan-600"><span>时间管理<br>混乱</span></div>
+                <!-- Center Cell: Ideal Self Description with Link to Main Page -->
+                <a href="index.html" class="nested-cell nested-cell-center">
+                    <i class="fas fa-bullseye"></i><span>理想自我<br><small>(专注·自律·健康·有序·成长·和谐·远见·行动力)</small></span>
+                </a>
+                <div class="nested-cell nested-cell-title text-purple-600"><span>情绪奴隶<br>& 动力荒漠</span></div>
+                <div class="nested-cell nested-cell-title text-blue-600"><span>人际关系<br>困扰</span></div>
+                <div class="nested-cell nested-cell-title text-pink-600"><span>健康习惯<br>忽视</span></div>
+                <div class="nested-cell nested-cell-title text-gray-600"><span>无规划<br>& 解难乏力</span></div>
+            </div>
+            <span class="tooltip-text">点击中心返回首页，了解理想自我的核心特质</span>
+        </div>
+
+        <!-- Cell 6: 情绪奴隶 & 动力荒漠 -->
+        <div class="outer-cell outer-cell-6 tooltip">
+            <div class="nested-grid">
+                <div class="nested-cell nested-cell-behavior text-purple-700"><i class="fas fa-bomb"></i><span><strong>情绪冲突</strong>爆发</span></div>
+                <div class="nested-cell nested-cell-behavior text-purple-700"><i class="fas fa-cloud-rain"></i><span>长期<strong>负面情绪</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-purple-700"><i class="fas fa-bed"></i><span>缺动力<strong>拖延</strong>任务</span></div>
+                <div class="nested-cell nested-cell-behavior text-purple-700"><i class="fas fa-plug"></i><span><strong>能量低下</strong> (困乏)</span></div>
+                <!-- Center Cell: Title with Link -->
+                <a href="情绪奴隶与动力荒漠.html" class="nested-cell nested-cell-center">
+                    <i class="fas fa-battery-empty"></i><span>情绪奴隶 &<br>动力荒漠</span>
+                </a>
+                <div class="nested-cell nested-cell-behavior text-purple-700"><i class="fas fa-thumbs-down"></i><span>遇挫<strong>放弃/否定</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-purple-700"><i class="far fa-circle"></i><span>缺<strong>成就/掌控感</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-purple-700"><i class="fas fa-comments"></i><span>易受<strong>批评</strong>影响</span></div>
+                <div class="nested-cell nested-cell-behavior text-purple-700"><i class="fas fa-seedling"></i><span>缺<strong>内在驱动力</strong></span></div>
+            </div>
+            <span class="tooltip-text">点击中心查看如何进行情绪管理，激发内在动力</span>
+        </div>
+
+        <!-- Cell 7: 人际关系困扰 -->
+        <div class="outer-cell outer-cell-7 tooltip">
+            <div class="nested-grid">
+                <div class="nested-cell nested-cell-behavior text-blue-700"><i class="fas fa-house"></i><span>与家人/爱人<strong>争吵</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-blue-700"><i class="fas fa-briefcase"></i><span>与同事<strong>关系紧张</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-blue-700"><i class="fas fa-glass-cheers"></i><span>聚会<strong>无聊/不适</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-blue-700"><i class="fas fa-microphone-slash"></i><span><strong>打断</strong>他人谈话</span></div>
+                <!-- Center Cell: Title with Link -->
+                <a href="人际关系困扰.html" class="nested-cell nested-cell-center">
+                    <i class="fas fa-user-group"></i><span>人际关系<br>困扰</span>
+                </a>
+                <div class="nested-cell nested-cell-behavior text-blue-700"><i class="fas fa-user-secret"></i><span>难<strong>理解他人</strong> (误解)</span></div>
+                <div class="nested-cell nested-cell-behavior text-blue-700"><i class="fas fa-plug-circle-xmark"></i><span>社交<strong>耗能/回避</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-blue-700"><i class="fas fa-handshake"></i><span>害怕<strong>求助/拒绝</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-blue-700"><i class="fas fa-draw-polygon"></i><span><strong>边界不清</strong></span></div>
+            </div>
+            <span class="tooltip-text">点击中心查看如何改善沟通，建立健康关系</span>
+        </div>
+
+        <!-- Cell 8: 健康习惯忽视 -->
+        <div class="outer-cell outer-cell-8 tooltip">
+            <div class="nested-grid">
+                <div class="nested-cell nested-cell-behavior text-pink-700"><i class="fas fa-joint"></i><span><strong>戒烟失败</strong> (依赖)</span></div>
+                <div class="nested-cell nested-cell-behavior text-pink-700"><i class="fas fa-burger"></i><span><strong>饮食</strong>不规律/不健康</span></div>
+                <div class="nested-cell nested-cell-behavior text-pink-700"><i class="fas fa-bed"></i><span><strong>作息混乱</strong> (缺觉)</span></div>
+                <div class="nested-cell nested-cell-behavior text-pink-700"><i class="fas fa-person-walking"></i><span>缺持续<strong>运动</strong></span></div>
+                <!-- Center Cell: Title with Link -->
+                <a href="健康习惯忽视.html" class="nested-cell nested-cell-center">
+                    <i class="fas fa-heart-broken"></i><span>健康习惯<br>忽视</span>
+                </a>
+                <div class="nested-cell nested-cell-behavior text-pink-700"><i class="fas fa-head-side-mask"></i><span>忽视<strong>身体信号</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-pink-700"><i class="fas fa-balance-scale"></i><span><strong>运动/恢复</strong>不匹配</span></div>
+                <div class="nested-cell nested-cell-behavior text-pink-700"><i class="fas fa-couch"></i><span><strong>久坐</strong>不动</span></div>
+                <div class="nested-cell nested-cell-behavior text-pink-700"><i class="fas fa-user-md"></i><span>忽视<strong>心理健康</strong></span></div>
+            </div>
+            <span class="tooltip-text">点击中心查看如何建立健康生活方式</span>
+        </div>
+
+        <!-- Cell 9: 无规划 & 解难乏力 -->
+        <div class="outer-cell outer-cell-9 tooltip">
+            <div class="nested-grid">
+                <div class="nested-cell nested-cell-behavior text-gray-700"><i class="far fa-calendar-times"></i><span>缺乏清晰<strong>计划</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-gray-700"><i class="fas fa-question-circle"></i><span>遇复杂任务<strong>卡壳</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-gray-700"><i class="fas fa-puzzle-piece"></i><span>不<strong>分解任务</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-gray-700"><i class="fas fa-exclamation-triangle"></i><span>缺<strong>应变预案</strong></span></div>
+                <!-- Center Cell: Title with Link -->
+                <a href="无规划与解难乏力.html" class="nested-cell nested-cell-center">
+                    <i class="fas fa-map"></i><span>无规划 &<br>解难乏力</span>
+                </a>
+                <div class="nested-cell nested-cell-behavior text-gray-700"><i class="fas fa-forward"></i><span>遇问题<strong>拖延/抱怨</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-gray-700"><i class="fas fa-user-times"></i><span><strong>评估能力</strong>不足</span></div>
+                <div class="nested-cell nested-cell-behavior text-gray-700"><i class="fas fa-lightbulb-slash"></i><span>缺<strong>备选方案</strong></span></div>
+                <div class="nested-cell nested-cell-behavior text-gray-700"><i class="fas fa-hands-helping"></i><span><strong>依赖他人</strong>解决</span></div>
+            </div>
+            <span class="tooltip-text">点击中心查看如何系统规划，提升解决问题能力</span>
+        </div>
+    </div>
+    
+    <!-- 添加图例部分 -->
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--red-bg);"></div>
+            <span>冲动主导 & 浅尝辄止</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--orange-bg);"></div>
+            <span>重复错误 & 缺乏远见</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--yellow-bg);"></div>
+            <span>内在无序 & 行动盲目</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--cyan-bg);"></div>
+            <span>时间管理混乱</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--green-bg);"></div>
+            <span>理想自我</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--purple-bg);"></div>
+            <span>情绪奴隶 & 动力荒漠</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--blue-bg);"></div>
+            <span>人际关系困扰</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--pink-bg);"></div>
+            <span>健康习惯忽视</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--gray-bg);"></div>
+            <span>无规划 & 解难乏力</span>
+        </div>
+    </div>
+    
+    <!-- 添加页脚 -->
+    <footer class="footer">
+        <p>© 2023 反愿景规划 - 通过识别不良行为模式，规划理想自我</p>
+    </footer>
+    
+    <!-- 添加JavaScript -->
+    <script>
+        // 移动端菜单切换
+        document.querySelector('.menu-button').addEventListener('click', function() {
+            const navLinks = document.querySelector('.navbar-links');
+            if (navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+            } else {
+                navLinks.classList.add('active');
+            }
+        });
+        
+        // 添加中心格子的脉动动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const centerCells = document.querySelectorAll('.nested-cell-center');
+            centerCells.forEach(cell => {
+                cell.classList.add('pulse-animation');
+            });
+        });
+        
+        // 添加键盘导航支持
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // 按ESC键返回首页
+                window.location.href = 'index.html';
+            }
+        });
+        
+        // 添加单元格点击效果
+        const outerCells = document.querySelectorAll('.outer-cell');
+        outerCells.forEach(cell => {
+            cell.addEventListener('click', function(e) {
+                // 如果点击的不是中心格链接，则模拟点击中心格
+                if (!e.target.closest('.nested-cell-center')) {
+                    const centerLink = this.querySelector('.nested-cell-center');
+                    if (centerLink && centerLink.href) {
+                        window.location.href = centerLink.href;
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
